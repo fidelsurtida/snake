@@ -45,6 +45,10 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 
 ## Project Status
 
-- March 27, 2024 - Initial commit of the project
+- March 27, 2024 
+  - Initial commit of the project
+- March 28, 2024 
+  - Refactored the project structure
+  
 <br>
 This project is currently under development.
