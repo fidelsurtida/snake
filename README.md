@@ -1,6 +1,8 @@
 # SNAKE GAME
 
-A simple project of a snake game based on the 1997 Nokia phone game.
+A simple project of a snake game based on the 1997 Nokia phone game 
+with improvised graphics and gameplay.
+
 
 ## Table of Contents
 
@@ -13,7 +15,9 @@ A simple project of a snake game based on the 1997 Nokia phone game.
 ## About
 
 A snake game replicated from the famous Nokia phone game application. 
-It contains improvised graphics but the gameplay will be almost the same.
+Unlike other implementations that uses grid system which appends
+and pops the snake parts, this snake showcases smooth movement by moving
+the parts per frame based on speed.
 <br><br>
 This will be my first ever game project in python as a software engineer.
 This showcases my knowledge about object-oriented design, and basic uses of 
@@ -51,6 +55,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Refactored the project structure
 - March 29, 2024
   - Added the snake class which the player can control.
+  - Restricted movement of snake to opposite direction.
   
 <br>
 This project is currently under development.

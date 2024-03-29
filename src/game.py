@@ -41,13 +41,13 @@ class Game:
             # KEYBOARD EVENTS
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    self.snake.move("LEFT")
+                    self.snake.move(Snake.LEFT)
                 if event.key == pygame.K_d:
-                    self.snake.move("RIGHT")
+                    self.snake.move(Snake.RIGHT)
                 if event.key == pygame.K_w:
-                    self.snake.move("UP")
+                    self.snake.move(Snake.UP)
                 if event.key == pygame.K_s:
-                    self.snake.move("DOWN")
+                    self.snake.move(Snake.DOWN)
 
         return True
 

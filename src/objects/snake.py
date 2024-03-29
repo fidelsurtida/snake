@@ -17,6 +17,12 @@ SIZE = 30
 
 
 class Snake:
+    # Movement Class Constants
+    UP = pygame.Vector2(0, -SPEED)
+    DOWN = pygame.Vector2(0, SPEED)
+    LEFT = pygame.Vector2(-SPEED, 0)
+    RIGHT = pygame.Vector2(SPEED, 0)
+
     def __init__(self, *, posx=512, posy=384):
         """
         Initialize a Snake object with a head and a list of body parts
@@ -24,6 +30,7 @@ class Snake:
         of going up.
         """
         self.speed = SPEED
+        self.direction = Snake.UP
         self.head = SnakePart(posx, posy, speed=SPEED, color="green")
         self.body = []
         for i in range(1, 10):
@@ -35,9 +42,9 @@ class Snake:
         This will be called by the keyboard event in the Game Class.
         It will set the next movement of the head of the snake.
         """
-        movements = {"UP": (0, -self.speed), "DOWN": (0, self.speed),
-                     "LEFT": (-self.speed, 0), "RIGHT": (self.speed, 0)}
-        self.head.next_movement(pygame.Vector2(movements[direction]))
+        if self.direction + direction != pygame.Vector2(0, 0):
+            self.direction = direction
+            self.head.next_movement(direction)
 
     def update(self):
         """
