@@ -8,6 +8,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+from objects.snake import Snake
 
 
 class Game:
@@ -19,18 +20,14 @@ class Game:
         self.WIDTH = screen.get_width()
         self.screen = screen
 
-        # Sample rectangle player
-        self.SNAKE_SPEED = 5
-        self.player = pygame.Rect(self.WIDTH // 2, self.HEIGHT // 2, 50, 50)
-        self.velocity = pygame.Vector2(self.SNAKE_SPEED, 0)
+        # Create the Snake object as the player
+        self.snake = Snake()
 
     def update(self):
         """
         Handles the game logic. Updates the game objects and status.
         """
-        self.player.move_ip(self.velocity.x, self.velocity.y)
-        if self.player.clamp(self.screen.get_rect()) != self.player:
-            self.velocity = pygame.Vector2(0, 0)
+        self.snake.update()
 
     def game_events(self):
         """
@@ -44,13 +41,13 @@ class Game:
             # KEYBOARD EVENTS
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    self.velocity = pygame.Vector2(-self.SNAKE_SPEED, 0)
+                    self.snake.move("LEFT")
                 if event.key == pygame.K_d:
-                    self.velocity = pygame.Vector2(self.SNAKE_SPEED, 0)
+                    self.snake.move("RIGHT")
                 if event.key == pygame.K_w:
-                    self.velocity = pygame.Vector2(0, -self.SNAKE_SPEED)
+                    self.snake.move("UP")
                 if event.key == pygame.K_s:
-                    self.velocity = pygame.Vector2(0, self.SNAKE_SPEED)
+                    self.snake.move("DOWN")
 
         return True
 
@@ -58,4 +55,4 @@ class Game:
         """
         Draws the game objects on the screen.
         """
-        pygame.draw.rect(self.screen, "white", self.player)
+        self.snake.draw(self.screen)

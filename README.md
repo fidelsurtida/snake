@@ -49,6 +49,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Initial commit of the project
 - March 28, 2024 
   - Refactored the project structure
+- March 29, 2024
+  - Added the snake class which the player can control.
   
 <br>
 This project is currently under development.
