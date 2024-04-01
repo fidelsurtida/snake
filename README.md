@@ -56,6 +56,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - March 29, 2024
   - Added the snake class which the player can control.
   - Restricted movement of snake to opposite direction.
+- April 1, 2024
+  - Implementation of rectangular snake cover for each turning parts.
   
 <br>
 This project is currently under development.

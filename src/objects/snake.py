@@ -36,6 +36,7 @@ class Snake:
         for i in range(1, 10):
             self.body.append(SnakePart(posx, posy + SIZE * i,
                                        speed=SPEED, color="white"))
+        self.font = pygame.font.Font(None, 36)
 
     def move(self, direction):
         """
@@ -59,8 +60,20 @@ class Snake:
 
     def draw(self, screen):
         """ Draws the snake parts with body first then lastly the head. """
+        # Draws the Body Parts first.
         for part in self.body[::-1]:
             part.draw(screen)
+
+        # Next draws the Rectangle Covers for each turn of its body parts.
+        snake = [self.head] + self.body
+        for i in range(len(snake) - 1):
+            part1 = snake[i].get_bounds()
+            part2 = snake[i+1].get_bounds()
+            if part1.colliderect(part2):
+                cover = snake[i+1].get_future_bounds()
+                pygame.draw.rect(screen, "gray", cover)
+
+        # Lastly Draw the Head
         self.head.draw(screen)
 
 
@@ -110,3 +123,15 @@ class SnakePart:
     def draw(self, screen):
         """ Draw this individual part to the screen. """
         pygame.draw.rect(screen, self._color, self._rect)
+
+    def get_bounds(self):
+        """ Returns the Rect or bounderies of this snake part. """
+        return self._rect
+
+    def get_future_bounds(self):
+        """
+        Returns a Rect object of its future position based on movement.
+        This will be used for generating the cover of the snake turn.
+        """
+        position = self._position + ((self._movement / SPEED) * SIZE)
+        return pygame.Rect(position, (SIZE, SIZE))
