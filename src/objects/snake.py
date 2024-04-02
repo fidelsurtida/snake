@@ -29,7 +29,6 @@ class Snake:
         This will be placed in the center of screen with initial movement
         of going up.
         """
-        self.speed = SPEED
         self.direction = Snake.UP
         self.head = SnakePart(posx, posy, direction=Snake.UP, color="green")
         self.body = []
@@ -132,7 +131,11 @@ class SnakePart:
     @property
     def bounds(self):
         """ Returns the Rect or bounderies of this snake part. """
-        return self._rect
+        return self._rect.copy()
+
+    def teleport(self, x, y):
+        """ Teleports the position of this snake part. """
+        self._rect.topleft = (x, y)
 
     @property
     def future_bounds(self):
@@ -142,8 +145,3 @@ class SnakePart:
         """
         position = self._position + ((self._movement / SPEED) * SIZE)
         return pygame.Rect(position, (SIZE, SIZE))
-
-    @property
-    def direction(self):
-        """ Returns the current direction of this part. """
-        return self._movement

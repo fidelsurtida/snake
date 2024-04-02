@@ -58,6 +58,9 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Restricted movement of snake to opposite direction.
 - April 1, 2024
   - Implementation of rectangular snake cover for each turning parts.
+- April 2, 2024
+  - Refactored code for direction using properties
+  - Implemented snake bounderies to move to the opposite side of the screen.
   
 <br>
 This project is currently under development.

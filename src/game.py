@@ -8,6 +8,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+from objects.snake import SIZE as SNAKESIZE
 from objects.snake import Snake
 
 
@@ -19,6 +20,9 @@ class Game:
         self.HEIGHT = screen.get_height()
         self.WIDTH = screen.get_width()
         self.screen = screen
+        self.bounderies = pygame.Rect(-SNAKESIZE, -SNAKESIZE,
+                                      self.WIDTH + SNAKESIZE * 2,
+                                      self.HEIGHT + SNAKESIZE * 2)
 
         # Create the Snake object as the player
         self.snake = Snake()
@@ -29,7 +33,15 @@ class Game:
         """
         self.snake.update()
 
+        # Check if each snake part collides with window bounderies
+        # If it collides then the part should appear on the opposite side.
         snake_parts = self.snake.parts
+        for part in snake_parts:
+            if part.bounds.clamp(self.bounderies) != part.bounds:
+                bounds = part.bounds.topleft + pygame.Vector2(SNAKESIZE)
+                x = (bounds.x % (self.WIDTH + SNAKESIZE)) - SNAKESIZE
+                y = (bounds.y % (self.HEIGHT + SNAKESIZE)) - SNAKESIZE
+                part.teleport(x, y)
 
     def game_events(self):
         """
