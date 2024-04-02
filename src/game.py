@@ -29,6 +29,8 @@ class Game:
         """
         self.snake.update()
 
+        snake_parts = self.snake.parts
+
     def game_events(self):
         """
         Handles the pygame events (QUIT and keyboard events).
