@@ -10,6 +10,7 @@ Author: Fidel Jesus O. Surtida I
 import pygame
 from objects.snake import SIZE as SNAKESIZE
 from objects.snake import Snake
+from objects.food import Food
 
 
 class Game:
@@ -26,6 +27,9 @@ class Game:
 
         # Create the Snake object as the player
         self.snake = Snake()
+        # Create a starting Food Object
+        self.apple = Food()
+        self.apple.spawn(self.screen.get_rect())
 
     def update(self):
         """
@@ -69,4 +73,6 @@ class Game:
         """
         Draws the game objects on the screen.
         """
+        self.apple.draw(self.screen)
         self.snake.draw(self.screen)
+

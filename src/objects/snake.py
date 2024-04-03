@@ -32,7 +32,7 @@ class Snake:
         self.direction = Snake.UP
         self.head = SnakePart(posx, posy, direction=Snake.UP, color="green")
         self.body = []
-        for i in range(1, 10):
+        for i in range(1, 4):
             self.body.append(SnakePart(posx, posy + SIZE * i,
                                        direction=Snake.UP, color="white"))
 
