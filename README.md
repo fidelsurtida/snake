@@ -11,6 +11,7 @@ with improvised graphics and gameplay.
 - [Usage](#usage)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
+- [Development Updates](#development-updates)
 
 ## About
 
@@ -47,7 +48,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 
 - [Fidel Jesus O. Surtida I](https://github.com/fidelsurtida) - *Game Developer*
 
-## Project Status
+## Development Updates
 
 - March 27, 2024 
   - Initial commit of the project
@@ -61,6 +62,10 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 2, 2024
   - Refactored code for direction using properties
   - Implemented snake bounderies to move to the opposite side of the screen.
+- April 3, 2024
+  - Added starting food class with simple spawn at random locations.
+  - Added snake head collision to destroy food. The food also respawns 
+    at a specified delay and random location after being eaten.
   
 <br>
-This project is currently under development.
+<b>This project is currently under development.</b>
