@@ -91,7 +91,9 @@ class Game:
     def snake_eat_food_update(self):
         """
         Checks if the snake head collides with the current food.
+        If it collides then destroy the food and grow the snake.
         """
         if self.apple.spawned:
             if self.snake.head.bounds.colliderect(self.apple.bounds):
                 self.apple.destroy()
+                self.snake.grow()

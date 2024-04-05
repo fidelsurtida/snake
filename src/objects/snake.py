@@ -10,6 +10,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+import copy
 
 # GLOBAL SETTINGS OF SNAKE
 SPEED = 3
@@ -18,6 +19,7 @@ SIZE = 30
 
 class Snake:
     # Movement Class Constants
+    ZERO = pygame.Vector2(0, 0)
     UP = pygame.Vector2(0, -SPEED)
     DOWN = pygame.Vector2(0, SPEED)
     LEFT = pygame.Vector2(-SPEED, 0)
@@ -32,6 +34,7 @@ class Snake:
         self.direction = Snake.UP
         self.head = SnakePart(posx, posy, direction=Snake.UP, color="green")
         self.body = []
+        self.tails = []
         for i in range(1, 4):
             self.body.append(SnakePart(posx, posy + SIZE * i,
                                        direction=Snake.UP, color="white"))
@@ -42,7 +45,7 @@ class Snake:
         It will set the next movement of the head of the snake.
         """
         # Prevents the snake from moving to the opposite direction
-        if self.direction + direction != pygame.Vector2(0, 0):
+        if self.direction + direction != Snake.ZERO:
             self.direction = direction
             self.head.next_movement(direction)
 
@@ -50,6 +53,7 @@ class Snake:
         """
         On every update, if a part has moved twice its size, it will return
         the previous movement and pass it to the next part.
+        This also appends a snake part as a tail if there are pending tails.
         """
         direction = self.head.update()
         for part in self.body:
@@ -57,23 +61,54 @@ class Snake:
                 part.next_movement(direction)
             direction = part.update()
 
+        # If there are pending tails, check first if it collides with current
+        # last body part. If the last body part goes past this pending tail,
+        # then teleport it to connect the edges and finally append it to the
+        # body list.
+        if self.tails:
+            stem, tail = self.body[-1], self.tails[0]
+            if not stem.bounds.colliderect(tail.bounds):
+                if stem.direction == Snake.UP:
+                    tail.teleport(*stem.bounds.bottomleft, corner="topleft")
+                elif stem.direction == Snake.DOWN:
+                    tail.teleport(*stem.bounds.topleft, corner="bottomleft")
+                elif stem.direction == Snake.LEFT:
+                    tail.teleport(*stem.bounds.bottomright, corner="bottomleft")
+                elif stem.direction == Snake.RIGHT:
+                    tail.teleport(*stem.bounds.bottomleft, corner="bottomright")
+
+                tail.direction = stem.direction
+                self.body.append(self.tails.pop(0))
+
     def draw(self, screen):
         """ Draws the snake parts with body first then lastly the head. """
         # Draws the Body Parts first.
         for part in self.body[::-1]:
             part.draw(screen)
+        # Next draws the pending tails if there are any.
+        for tail in self.tails:
+            tail.draw(screen)
 
         # Next draws the Rectangle Covers for each turn of its body parts.
         snake = self.parts
         for i in range(len(snake) - 1):
-            part1 = snake[i].bounds
-            part2 = snake[i+1].bounds
-            if part1.colliderect(part2):
-                cover = snake[i+1].future_bounds
+            part1, part2 = snake[i:i+2]
+            if part1.bounds.colliderect(part2.bounds):
+                cover = part2.future_bounds
                 pygame.draw.rect(screen, "gray", cover)
 
         # Lastly Draw the Head
         self.head.draw(screen)
+
+    def grow(self):
+        """
+        To grow the snake, we need to copy the last part or the tail.
+        We also stop this copied part's movement and append it to the
+        queue of next tails.
+        """
+        last = copy.deepcopy(self.body[-1])
+        last.stop()
+        self.tails.append(last)
 
     @property
     def parts(self):
@@ -128,14 +163,33 @@ class SnakePart:
         """ Draw this individual part to the screen. """
         pygame.draw.rect(screen, self._color, self._rect)
 
+    def teleport(self, x, y, *, corner="topleft"):
+        """ Teleports the position of this snake part. """
+        match corner:
+            case "topleft": self._rect.topleft = (x, y)
+            case "topright": self._rect.topright = (x, y)
+            case "bottomleft": self._rect.bottomleft = (x, y)
+            case "bottomright": self._rect.bottomright = (x, y)
+
+    def stop(self):
+        """ Stops the movement and next movement of this snake part. """
+        self._movement = Snake.ZERO
+        self._next_direction = Snake.ZERO
+
     @property
     def bounds(self):
         """ Returns the Rect or bounderies of this snake part. """
         return self._rect.copy()
 
-    def teleport(self, x, y):
-        """ Teleports the position of this snake part. """
-        self._rect.topleft = (x, y)
+    @property
+    def direction(self):
+        """ Returns the current movement of this snake part. """
+        return self._movement
+
+    @direction.setter
+    def direction(self, value):
+        """ Sets the current movement of this snake part. """
+        self._movement = value
 
     @property
     def future_bounds(self):

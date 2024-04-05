@@ -66,6 +66,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added starting food class with simple spawn at random locations.
   - Added snake head collision to destroy food. The food also respawns 
     at a specified delay and random location after being eaten.
+- April 5, 2024
+  - Implemented snake body grow logic after eating food.
   
 <br>
 <b>This project is currently under development.</b>
