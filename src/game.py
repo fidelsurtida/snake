@@ -8,6 +8,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+from interface import Interface
 from objects.snake import SIZE as SNAKESIZE
 from objects.snake import Snake
 from objects.food import Food
@@ -25,10 +26,14 @@ class Game:
                                       self.WIDTH + SNAKESIZE * 2,
                                       self.HEIGHT + SNAKESIZE * 2)
 
+        # Initialize the game interface manager
+        self.interface = Interface(screen)
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object
         self.apple = Food(screen_width=self.WIDTH, screen_height=self.HEIGHT)
+        # Score of the current game
+        self.score = 0
 
     def update(self):
         """
@@ -75,6 +80,9 @@ class Game:
         self.apple.draw(self.screen)
         self.snake.draw(self.screen)
 
+        # Lastly draw the game interface
+        self.interface.draw()
+
     def snake_loop_bounderies_update(self):
         """
         Check if each snake part collides with window bounderies
@@ -97,3 +105,6 @@ class Game:
             if self.snake.head.bounds.colliderect(self.apple.bounds):
                 self.apple.destroy()
                 self.snake.grow()
+                # Update the score and the label
+                self.score += 10
+                self.interface.update_score(self.score)

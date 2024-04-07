@@ -68,6 +68,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
     at a specified delay and random location after being eaten.
 - April 5, 2024
   - Implemented snake body grow logic after eating food.
+- April 7, 2024
+  - Created initial Interface Manager that updates and displays score.
   
 <br>
 <b>This project is currently under development.</b>
