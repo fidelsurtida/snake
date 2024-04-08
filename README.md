@@ -70,6 +70,9 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Implemented snake body grow logic after eating food.
 - April 7, 2024
   - Created initial Interface Manager that updates and displays score.
+- April 8, 2024
+  - Reimplemented GUI Manager to use the library pygame_gui. Now displays
+    the score inside a white panel at the top.
   
 <br>
 <b>This project is currently under development.</b>

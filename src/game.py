@@ -8,6 +8,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+import pygame_gui
 from interface import Interface
 from objects.snake import SIZE as SNAKESIZE
 from objects.snake import Snake
@@ -15,19 +16,20 @@ from objects.food import Food
 
 
 class Game:
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, screen: pygame.Surface, manager: pygame_gui.UIManager):
         """
         Initialization of game objects and parameters.
         """
         self.HEIGHT = screen.get_height()
         self.WIDTH = screen.get_width()
         self.screen = screen
+        self.manager = manager
         self.bounderies = pygame.Rect(-SNAKESIZE, -SNAKESIZE,
                                       self.WIDTH + SNAKESIZE * 2,
                                       self.HEIGHT + SNAKESIZE * 2)
 
         # Initialize the game interface manager
-        self.interface = Interface(screen)
+        self.interface = Interface(screen, manager)
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object
@@ -56,6 +58,9 @@ class Game:
             if event.type == pygame.QUIT:
                 return False
 
+            # GUI Manager pass each event to the GUI
+            self.manager.process_events(event)
+
             # KEYBOARD EVENTS
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
@@ -79,9 +84,6 @@ class Game:
         """
         self.apple.draw(self.screen)
         self.snake.draw(self.screen)
-
-        # Lastly draw the game interface
-        self.interface.draw()
 
     def snake_loop_bounderies_update(self):
         """
