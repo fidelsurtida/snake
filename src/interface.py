@@ -42,6 +42,7 @@ class Interface:
         """
         score_width = 200
         lifetime_width = 200
+        stretch_width = 180
 
         # Create game panel strip at the top of the screen
         self.game_panel = pygame_gui.elements.UIPanel(
@@ -60,6 +61,13 @@ class Interface:
             text="LIFETIME: 100", container=self.game_panel,
             object_id="#lifetime_lbl"
         )
+        # Create the stretch label (length of the snake)
+        stretch_pos_x = self.game_panel.rect.width - stretch_width
+        self._stretch_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(stretch_pos_x, 0, stretch_width, 35),
+            text="STRETCH: 0m", container=self.game_panel,
+            object_id="#stretch_lbl"
+        )
 
     def update_score(self, score):
         """ Updates the score label with current score of the game. """
@@ -68,3 +76,7 @@ class Interface:
     def update_lifetime(self, lifetime):
         """ Updates the lifetime label with current lifetime of the game. """
         self._lifetime_lbl.set_text(f"LIFETIME: {lifetime:.1f}")
+
+    def update_stretch(self, stretch):
+        """ Updates the stretch label with current length of the snake. """
+        self._stretch_lbl.set_text(f"STRETCH: {stretch}m")

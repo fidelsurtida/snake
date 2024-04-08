@@ -28,6 +28,14 @@
       }
    },
 
+   "#stretch_lbl":
+   {
+      "misc":
+      {
+         "text_horiz_alignment": "left"
+      }
+   },
+
    "#game_panel":
    {
       "colours":

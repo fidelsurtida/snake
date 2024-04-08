@@ -115,6 +115,11 @@ class Snake:
         """ Returns all the snake parts including the head. """
         return [self.head] + self.body
 
+    @property
+    def stretch(self):
+        """ Gets the total stretch of the snake excluding the initial parts. """
+        return (len(self.body) - 2) * SIZE // 10
+
 
 class SnakePart:
     def __init__(self, posx, posy, *, direction, color):

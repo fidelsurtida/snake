@@ -75,6 +75,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
     the score inside a white panel at the top.
   - Added lifetime mechanic and label that decreases per second 
     and replenishes on eating the food. 
+  - Added the Stretch label that shows the added length of snake in meters.
   
 <br>
 <b>This project is currently under development.</b>

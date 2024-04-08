@@ -118,7 +118,9 @@ class Game:
             if self.snake.head.bounds.colliderect(self.apple.bounds):
                 self.apple.destroy()
                 self.snake.grow()
-                # Update the score and the label, add the health regen
+                # Update the score add the health regen
                 self.score += Game.FOOD_SCORE
                 self.lifetime += Game.FOOD_REGEN
+                # Update the game labels
                 self.interface.update_score(self.score)
+                self.interface.update_stretch(self.snake.stretch)
