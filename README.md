@@ -73,6 +73,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 8, 2024
   - Reimplemented GUI Manager to use the library pygame_gui. Now displays
     the score inside a white panel at the top.
+  - Added lifetime mechanic and label that decreases per second 
+    and replenishes on eating the food. 
   
 <br>
 <b>This project is currently under development.</b>

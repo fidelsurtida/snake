@@ -38,13 +38,13 @@ def main():
     running = True
     while running:
         # Limit FPS to 60 and get time delta
-        time_delta = clock.tick(60)
+        time_delta = clock.tick(60) / 1000
 
         # Event handling
         running = game.game_events()
 
         # Game and GUI Updates
-        game.update()
+        game.update(time_delta)
         manager.update(time_delta)
 
         # Clear the screen

@@ -1,17 +1,4 @@
 {
-   "#game_panel":
-   {
-      "colours":
-      {
-         "dark_bg": "#bcbcbc",
-         "normal_border": "#bcbcbc,#aaa,#555,-90"
-      },
-      "misc":
-      {
-         "border_width": "5"
-      }
-   },
-
    "label":
    {
       "colours":
@@ -22,10 +9,35 @@
       {
          "size": "18",
          "bold": "1"
-      },
+      }
+   },
+
+   "#score_lbl":
+   {
       "misc":
       {
          "text_horiz_alignment": "center"
+      }
+   },
+
+   "#lifetime_lbl":
+   {
+      "misc":
+      {
+         "text_horiz_alignment": "left"
+      }
+   },
+
+   "#game_panel":
+   {
+      "colours":
+      {
+         "dark_bg": "#bcbcbc",
+         "normal_border": "#bcbcbc,#aaa,#555,-90"
+      },
+      "misc":
+      {
+         "border_width": "5"
       }
    }
 }

@@ -16,6 +16,10 @@ from objects.food import Food
 
 
 class Game:
+    # GAME CONSTANT SETTINGS
+    FOOD_SCORE = 10
+    FOOD_REGEN = 2
+
     def __init__(self, screen: pygame.Surface, manager: pygame_gui.UIManager):
         """
         Initialization of game objects and parameters.
@@ -36,11 +40,18 @@ class Game:
         self.apple = Food(screen_width=self.WIDTH, screen_height=self.HEIGHT)
         # Score of the current game
         self.score = 0
+        # Lifetime counter of the current game
+        self.lifetime = 100
 
-    def update(self):
+    def update(self, time_delta):
         """
         Handles the game logic. Updates the game objects and status.
+        This also is passed the time_delta computation from the main loop.
         """
+        # Reduce the life of the player based on the passed time
+        self.lifetime -= time_delta
+        self.interface.update_lifetime(max(0, self.lifetime))
+
         # Update the movement of the snake
         self.snake.update()
         # Update the snake to loop its movement after hitting the bounderies
@@ -107,6 +118,7 @@ class Game:
             if self.snake.head.bounds.colliderect(self.apple.bounds):
                 self.apple.destroy()
                 self.snake.grow()
-                # Update the score and the label
-                self.score += 10
+                # Update the score and the label, add the health regen
+                self.score += Game.FOOD_SCORE
+                self.lifetime += Game.FOOD_REGEN
                 self.interface.update_score(self.score)
