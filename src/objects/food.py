@@ -22,7 +22,7 @@ class Food:
     # Class Constants
     SPAWN_FOOD_EVENT = pygame.USEREVENT + 1
 
-    def __init__(self, *, screen_width, screen_height):
+    def __init__(self, *, screen_width, screen_height, points, regen):
         """
         Initializes a red Food Object with its given size. At first, it will
         start as unspawned and will be triggered to spawn after a delay.
@@ -31,6 +31,8 @@ class Food:
         """
         self.color = "red"
         self.spawned = False
+        self.points = points
+        self.regen = regen
         self._swidth = screen_width
         self._sheight = screen_height
         self._rect = None

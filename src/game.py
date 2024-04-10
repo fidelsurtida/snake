@@ -16,9 +16,6 @@ from objects.food import Food
 
 
 class Game:
-    # GAME CONSTANT SETTINGS
-    FOOD_SCORE = 10
-    FOOD_REGEN = 2
 
     def __init__(self, screen: pygame.Surface, manager: pygame_gui.UIManager):
         """
@@ -28,20 +25,19 @@ class Game:
         self.WIDTH = screen.get_width()
         self.screen = screen
         self.manager = manager
-        self.bounderies = pygame.Rect(-SNAKESIZE, -SNAKESIZE,
+        self.bounderies = pygame.Rect(-SNAKESIZE, 0,
                                       self.WIDTH + SNAKESIZE * 2,
-                                      self.HEIGHT + SNAKESIZE * 2)
+                                      self.HEIGHT + SNAKESIZE)
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object
-        self.apple = Food(screen_width=self.WIDTH, screen_height=self.HEIGHT)
+        self.apple = Food(screen_width=self.WIDTH, screen_height=self.HEIGHT,
+                          points=10, regen=2)
         # Score of the current game
         self.score = 0
-        # Lifetime counter of the current game
-        self.lifetime = 100
 
     def update(self, time_delta):
         """
@@ -49,8 +45,8 @@ class Game:
         This also is passed the time_delta computation from the main loop.
         """
         # Reduce the life of the player based on the passed time
-        self.lifetime -= time_delta
-        self.interface.update_lifetime(max(0, self.lifetime))
+        self.snake.lifetime -= time_delta
+        self.interface.update_lifetime(max(0, self.snake.lifetime))
 
         # Update the movement of the snake
         self.snake.update()
@@ -106,7 +102,7 @@ class Game:
             if part.bounds.clamp(self.bounderies) != part.bounds:
                 bounds = part.bounds.topleft + pygame.Vector2(SNAKESIZE)
                 x = (bounds.x % (self.WIDTH + SNAKESIZE)) - SNAKESIZE
-                y = (bounds.y % (self.HEIGHT + SNAKESIZE)) - SNAKESIZE
+                y = ((bounds.y - SNAKESIZE) % self.HEIGHT)
                 part.teleport(x, y)
 
     def snake_eat_food_update(self):
@@ -119,8 +115,8 @@ class Game:
                 self.apple.destroy()
                 self.snake.grow()
                 # Update the score add the health regen
-                self.score += Game.FOOD_SCORE
-                self.lifetime += Game.FOOD_REGEN
+                self.score += self.apple.points
+                self.snake.lifetime += self.apple.regen
                 # Update the game labels
                 self.interface.update_score(self.score)
                 self.interface.update_stretch(self.snake.stretch)

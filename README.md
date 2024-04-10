@@ -76,6 +76,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added lifetime mechanic and label that decreases per second 
     and replenishes on eating the food. 
   - Added the Stretch label that shows the added length of snake in meters.
+- April 10, 2024
+  - Fixed snake loop boundary (y-axis) which includes the game panel at top.
   
 <br>
 <b>This project is currently under development.</b>
