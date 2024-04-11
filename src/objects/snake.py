@@ -32,6 +32,7 @@ class Snake:
         This will be placed in the center of screen with initial movement
         of going up.
         """
+        self._locked_direction = False
         self.direction = Snake.UP
         self.head = SnakePart(posx, posy, direction=Snake.UP, color="green")
         self.body = []
@@ -47,9 +48,13 @@ class Snake:
         It will set the next movement of the head of the snake.
         """
         # Prevents the snake from moving to the opposite direction
-        if self.direction + direction != Snake.ZERO:
-            self.direction = direction
-            self.head.next_movement(direction)
+        # Also once this move is given, lock movement change until
+        # the snake part has moved twice its size.
+        if not self._locked_direction:
+            if self.direction + direction != Snake.ZERO:
+                self.direction = direction
+                self.head.next_movement(direction)
+                self._locked_direction = True
 
     def update(self):
         """
@@ -58,6 +63,10 @@ class Snake:
         This also appends a snake part as a tail if there are pending tails.
         """
         direction = self.head.update()
+        # Unlock the movement change if the head returned a direction
+        if direction is not None:
+            self._locked_direction = False
+        # Proceed to propagate the movement direction to the rest of body.
         for part in self.body:
             if direction:
                 part.next_movement(direction)
