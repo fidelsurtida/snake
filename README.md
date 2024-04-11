@@ -80,6 +80,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed snake loop boundary (y-axis) which includes the game panel at top.
 - April 11, 2024
   - Added a regen label with fade and move up animation after eating food.
+  - Fixed food respawn bounderies and added checker to prevent overlap with snake.
   
 <br>
 <b>This project is currently under development.</b>

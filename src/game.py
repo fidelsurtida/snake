@@ -86,7 +86,7 @@ class Game:
 
             # SPAWN FOOD EVENT
             if event.type == Food.SPAWN_FOOD_EVENT:
-                self.apple.spawn()
+                self.apple.spawn(off_limits=self.snake.parts)
 
         return True
 

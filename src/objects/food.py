@@ -43,11 +43,26 @@ class Food:
         """ Triggers the timer for the Food to spawn. """
         pygame.time.set_timer(self.SPAWN_FOOD_EVENT, SPAWN_DELAY)
 
-    def spawn(self):
-        """ Sets the Food at a random position based on screen bounds. """
-        x = random.randint(0, self._swidth - SIZE)
-        y = random.randint(0, self._sheight - SIZE)
-        self._rect = pygame.Rect(x, y, SIZE, SIZE)
+    def spawn(self, *, off_limits):
+        """
+        Sets the Food at a random position based on screen bounds.
+        Spawn it not too close on the window borders and also there will
+        be a GUI panel at the top with 50 height.
+        We also need to check if the random position is not occupied by
+        any of the snake parts.
+        """
+        # Loop until a valid position is generated
+        while True:
+            x = random.randint(SIZE, self._swidth - SIZE * 2)
+            y = random.randint(SIZE + 50, self._sheight - SIZE * 2)
+            rect = pygame.Rect(x, y, SIZE, SIZE)
+            for part in off_limits:
+                if part.bounds.colliderect(rect):
+                    break
+            else:
+                break
+        # Initialize the final valid position in this food object
+        self._rect = rect
         self.spawned = True
         pygame.time.set_timer(self.SPAWN_FOOD_EVENT, 0)
 
