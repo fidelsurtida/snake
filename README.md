@@ -38,7 +38,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgements
 
-Mention any individuals, projects, or resources that you found helpful or inspirational during the development of your project.
+- Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
 
 ## Support
 
@@ -82,6 +82,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added a regen label with fade and move up animation after eating food.
   - Fixed food respawn bounderies and added checker to prevent overlap with snake.
   - Fixed bug of snake movement going back when pressing 2 simultaneous directions.
+  - Added an apple sprite to the food class.
   
 <br>
 <b>This project is currently under development.</b>

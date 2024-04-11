@@ -12,13 +12,16 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import random
+from pathlib import Path
+from pygame.sprite import Sprite
 
 # GLOBAL SETTINGS OF THE FOOD
-SIZE = 20
+SIZE = 35
 SPAWN_DELAY = 1000
+ASSETS = Path(__file__).resolve().parent.parent.parent / "assets"
 
 
-class Food:
+class Food(Sprite):
     # Class Constants
     SPAWN_FOOD_EVENT = pygame.USEREVENT + 1
 
@@ -29,13 +32,14 @@ class Food:
         This also accepts the screen width and height to determine the
         random position of the Food.
         """
-        self.color = "red"
+        super().__init__()
+        self.image = pygame.image.load(str(ASSETS / "apple.png"))
+        self.image = pygame.transform.scale(self.image, (SIZE, SIZE))
         self.spawned = False
         self.points = points
         self.regen = regen
         self._swidth = screen_width
         self._sheight = screen_height
-        self._rect = None
         # Start the timer to spawn this Food Object after instantiation.
         self._trigger_spawn()
 
@@ -62,7 +66,7 @@ class Food:
             else:
                 break
         # Initialize the final valid position in this food object
-        self._rect = rect
+        self.rect = rect
         self.spawned = True
         pygame.time.set_timer(self.SPAWN_FOOD_EVENT, 0)
 
@@ -72,15 +76,15 @@ class Food:
         Also triggers the spawn timer for the next Food to spawn.
         """
         self.spawned = False
-        self._rect = None
+        self.rect = None
         self._trigger_spawn()
 
     def draw(self, screen):
         """ Draws the Food to the screen only if spawned. """
         if self.spawned:
-            pygame.draw.rect(screen, self.color, self._rect)
+            screen.blit(self.image, self.rect)
 
     @property
     def bounds(self):
         """ Returns the Rect object of the Food. """
-        return self._rect.copy()
+        return self.rect.copy()
