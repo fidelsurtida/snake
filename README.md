@@ -78,6 +78,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added the Stretch label that shows the added length of snake in meters.
 - April 10, 2024
   - Fixed snake loop boundary (y-axis) which includes the game panel at top.
+- April 11, 2024
+  - Added a regen label with fade and move up animation after eating food.
   
 <br>
 <b>This project is currently under development.</b>

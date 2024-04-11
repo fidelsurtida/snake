@@ -55,6 +55,9 @@ class Game:
         # Update the snake if it collides with the food and eats it
         self.snake_eat_food_update()
 
+        # Update the Interface Manager for animation of some elements
+        self.interface.update()
+
     def game_events(self):
         """
         Handles the pygame events (QUIT and keyboard events).
@@ -65,8 +68,10 @@ class Game:
             if event.type == pygame.QUIT:
                 return False
 
-            # GUI Manager pass each event to the GUI
+            # GUI Manager pass each event to the pygame_gui
             self.manager.process_events(event)
+            # Pass the event also to the interface manager
+            self.interface.process_events(event)
 
             # KEYBOARD EVENTS
             if event.type == pygame.KEYDOWN:
@@ -112,11 +117,15 @@ class Game:
         """
         if self.apple.spawned:
             if self.snake.head.bounds.colliderect(self.apple.bounds):
-                self.apple.destroy()
-                self.snake.grow()
+                # Spawn a regen label
+                apple_pos = pygame.Vector2(self.apple.bounds.topleft)
+                self.interface.spawn_regen_label(apple_pos, self.apple.regen)
                 # Update the score add the health regen
                 self.score += self.apple.points
                 self.snake.lifetime += self.apple.regen
                 # Update the game labels
                 self.interface.update_score(self.score)
                 self.interface.update_stretch(self.snake.stretch)
+                # Destroy the apple and grow the snake
+                self.snake.grow()
+                self.apple.destroy()

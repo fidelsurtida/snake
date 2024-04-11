@@ -12,6 +12,19 @@
       }
    },
 
+   "@regen_lbl":
+   {
+      "colours":
+      {
+         "normal_text": "green"
+      },
+      "font":
+      {
+         "size": "26",
+         "bold": "1"
+      }
+   },
+
    "#score_lbl":
    {
       "misc":

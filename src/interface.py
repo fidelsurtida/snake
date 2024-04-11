@@ -35,6 +35,8 @@ class Interface:
 
         # Initialize all the GUI elements for PLAY state
         self._initialize_play_elements()
+        # Container for tracking the regen labels for animation
+        self._regen_labels = []
 
     def _initialize_play_elements(self):
         """
@@ -68,6 +70,30 @@ class Interface:
             text="STRETCH: 0m", container=self.game_panel,
             object_id="#stretch_lbl"
         )
+
+    def update(self):
+        """ Updates manually some of the animations for GUI elements. """
+        for label in self._regen_labels:
+            x, y = label.rect.topleft
+            label.set_relative_position((x, y-1))
+
+    def process_events(self, event):
+        """ Checks for events related to pygame_gui elements."""
+        # TEXT EFFECT FINISHED EVENT
+        if event.type == pygame_gui.UI_TEXT_EFFECT_FINISHED:
+            if event.ui_element.get_object_id() == "@regen_lbl":
+                self._regen_labels.remove(event.ui_element)
+                event.ui_element.kill()
+
+    def spawn_regen_label(self, position, regen):
+        """ Spawns a label that shows the regen stat after eating food. """
+        hp_label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(position.x, position.y-30, 60, 40),
+            text=f"+{regen}♥", object_id="@regen_lbl"
+        )
+        self._regen_labels.append(hp_label)
+        hp_label.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_OUT,
+                                   {"time_per_alpha_change": 6})
 
     def update_score(self, score):
         """ Updates the score label with current score of the game. """
