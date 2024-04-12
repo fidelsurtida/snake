@@ -11,14 +11,16 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import copy
-
-# GLOBAL SETTINGS OF SNAKE
-SPEED = 3
-SIZE = 30
-LIFETIME = 100
+from src.config import Config
 
 
 class Snake:
+
+    # Snake Settings from Config
+    SPEED = Config.SNAKE_SPEED
+    SIZE = Config.SNAKE_SIZE
+    LIFETIME = Config.SNAKE_LIFETIME
+
     # Movement Class Constants
     ZERO = pygame.Vector2(0, 0)
     UP = pygame.Vector2(0, -SPEED)
@@ -37,9 +39,9 @@ class Snake:
         self.head = SnakePart(posx, posy, direction=Snake.UP, color="green")
         self.body = []
         self.tails = []
-        self.lifetime = LIFETIME
+        self.lifetime = Snake.LIFETIME
         for i in range(1, 4):
-            self.body.append(SnakePart(posx, posy + SIZE * i,
+            self.body.append(SnakePart(posx, posy + Snake.SIZE * i,
                                        direction=Snake.UP, color="white"))
 
     def move(self, direction):
@@ -129,7 +131,7 @@ class Snake:
     @property
     def stretch(self):
         """ Gets the total stretch of the snake excluding the initial parts. """
-        return (len(self.body) - 2) * SIZE // 10
+        return (len(self.body) - 2) * Snake.SIZE // 10
 
 
 class SnakePart:
@@ -141,11 +143,13 @@ class SnakePart:
         And the next_direction is the next movement of the part
         after it moves twice its size.
         """
-        self._position = pygame.Vector2(posx - SIZE//2, posy - SIZE//2)
+        self._position = pygame.Vector2(posx - Snake.SIZE // 2,
+                                        posy - Snake.SIZE // 2)
         self._next_direction = direction
         self._movement = direction
         self._color = color
-        self._rect = pygame.Rect(self._position.x, self._position.y, SIZE, SIZE)
+        self._rect = pygame.Rect(self._position.x, self._position.y,
+                                 Snake.SIZE, Snake.SIZE)
 
     def next_movement(self, direction):
         """
@@ -165,8 +169,8 @@ class SnakePart:
         """
         old_direction = None
         if (
-            abs(self._rect.x - self._position.x) >= SIZE or
-            abs(self._rect.y - self._position.y) >= SIZE
+            abs(self._rect.x - self._position.x) >= Snake.SIZE or
+            abs(self._rect.y - self._position.y) >= Snake.SIZE
         ):
             old_direction = self._movement
             self._movement = self._next_direction
@@ -213,5 +217,5 @@ class SnakePart:
         Returns a Rect object of its future position based on movement.
         This will be used for generating the cover of the snake turn.
         """
-        position = self._position + ((self._movement / SPEED) * SIZE)
-        return pygame.Rect(position, (SIZE, SIZE))
+        position = self._position + (self._movement / Snake.SPEED * Snake.SIZE)
+        return pygame.Rect(position, (Snake.SIZE, Snake.SIZE))

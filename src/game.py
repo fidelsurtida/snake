@@ -10,9 +10,9 @@ Author: Fidel Jesus O. Surtida I
 import pygame
 import pygame_gui
 from interface import Interface
-from objects.snake import SIZE as SNAKESIZE
-from objects.snake import Snake
-from objects.food import Food
+from src.config import Config
+from src.objects.snake import Snake
+from src.objects.food import Food
 
 
 class Game:
@@ -21,21 +21,20 @@ class Game:
         """
         Initialization of game objects and parameters.
         """
-        self.HEIGHT = screen.get_height()
-        self.WIDTH = screen.get_width()
+        self.HEIGHT = Config.SCREEN_HEIGHT
+        self.WIDTH = Config.SCREEN_WIDTH
         self.screen = screen
         self.manager = manager
-        self.bounderies = pygame.Rect(-SNAKESIZE, 0,
-                                      self.WIDTH + SNAKESIZE * 2,
-                                      self.HEIGHT + SNAKESIZE)
+        self.bounderies = pygame.Rect(-Snake.SIZE, 0,
+                                      self.WIDTH + Snake.SIZE * 2,
+                                      self.HEIGHT + Snake.SIZE)
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object
-        self.apple = Food(screen_width=self.WIDTH, screen_height=self.HEIGHT,
-                          points=10, regen=2)
+        self.apple = Food(filename="apple.png", points=10, regen=2)
         # Score of the current game
         self.score = 0
 
@@ -105,9 +104,9 @@ class Game:
         snake_parts = self.snake.parts
         for part in snake_parts:
             if part.bounds.clamp(self.bounderies) != part.bounds:
-                bounds = part.bounds.topleft + pygame.Vector2(SNAKESIZE)
-                x = (bounds.x % (self.WIDTH + SNAKESIZE)) - SNAKESIZE
-                y = ((bounds.y - SNAKESIZE) % self.HEIGHT)
+                bounds = part.bounds.topleft + pygame.Vector2(Snake.SIZE)
+                x = (bounds.x % (self.WIDTH + Snake.SIZE)) - Snake.SIZE
+                y = ((bounds.y - Snake.SIZE) % self.HEIGHT)
                 part.teleport(x, y)
 
     def snake_eat_food_update(self):

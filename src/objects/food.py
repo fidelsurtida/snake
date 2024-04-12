@@ -12,20 +12,20 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import random
-from pathlib import Path
 from pygame.sprite import Sprite
-
-# GLOBAL SETTINGS OF THE FOOD
-SIZE = 35
-SPAWN_DELAY = 1000
-ASSETS = Path(__file__).resolve().parent.parent.parent / "assets"
+from src.config import Config
 
 
 class Food(Sprite):
-    # Class Constants
+
+    # Food Settings from Config
+    SIZE = Config.FOOD_SIZE
+    SPAWN_DELAY = Config.FOOD_SPAWN_DELAY
+
+    # Class Event Constant
     SPAWN_FOOD_EVENT = pygame.USEREVENT + 1
 
-    def __init__(self, *, screen_width, screen_height, points, regen):
+    def __init__(self, *, filename, points, regen):
         """
         Initializes a red Food Object with its given size. At first, it will
         start as unspawned and will be triggered to spawn after a delay.
@@ -33,19 +33,19 @@ class Food(Sprite):
         random position of the Food.
         """
         super().__init__()
-        self.image = pygame.image.load(str(ASSETS / "apple.png"))
-        self.image = pygame.transform.scale(self.image, (SIZE, SIZE))
+        self.image = pygame.image.load(Config.assets_path(filename))
+        self.image = pygame.transform.scale(self.image, (self.SIZE, self.SIZE))
         self.spawned = False
         self.points = points
         self.regen = regen
-        self._swidth = screen_width
-        self._sheight = screen_height
+        self._swidth = Config.SCREEN_WIDTH
+        self._sheight = Config.SCREEN_HEIGHT
         # Start the timer to spawn this Food Object after instantiation.
         self._trigger_spawn()
 
     def _trigger_spawn(self):
         """ Triggers the timer for the Food to spawn. """
-        pygame.time.set_timer(self.SPAWN_FOOD_EVENT, SPAWN_DELAY)
+        pygame.time.set_timer(self.SPAWN_FOOD_EVENT, self.SPAWN_DELAY)
 
     def spawn(self, *, off_limits):
         """
@@ -57,9 +57,9 @@ class Food(Sprite):
         """
         # Loop until a valid position is generated
         while True:
-            x = random.randint(SIZE, self._swidth - SIZE * 2)
-            y = random.randint(SIZE + 50, self._sheight - SIZE * 2)
-            rect = pygame.Rect(x, y, SIZE, SIZE)
+            x = random.randint(self.SIZE, self._swidth - self.SIZE * 2)
+            y = random.randint(self.SIZE + 50, self._sheight - self.SIZE * 2)
+            rect = pygame.Rect(x, y, self.SIZE, self.SIZE)
             for part in off_limits:
                 if part.bounds.colliderect(rect):
                     break

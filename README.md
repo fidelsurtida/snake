@@ -83,6 +83,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed food respawn bounderies and added checker to prevent overlap with snake.
   - Fixed bug of snake movement going back when pressing 2 simultaneous directions.
   - Added an apple sprite to the food class.
+- April 12, 2024
+  - Added config class to store all game configurations. Refactored all current config codes.
   
 <br>
 <b>This project is currently under development.</b>

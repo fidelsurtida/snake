@@ -11,21 +11,16 @@ Project Start: March 27, 2024
 import pygame
 import pygame_gui
 from pathlib import Path
+from src.config import Config
 from src.game import Game
 
 
 # Initialize Pygame
 pygame.init()
 
-# Settings for the game screen dimensions
-SCREEN_DIMENSIONS = (1024, 768)
-# Load the theme JSON file for the GUI Manager
-theme_path = Path(__file__).resolve().parent.parent / "data/theme.json"
 # Create the Screen and GUI Manager
-screen = pygame.display.set_mode(SCREEN_DIMENSIONS)
-manager = pygame_gui.UIManager(SCREEN_DIMENSIONS, str(theme_path))
-# Set up the game clock and the window title
-clock = pygame.time.Clock()
+screen = pygame.display.set_mode(Config.SCREEN_DIMENSIONS)
+manager = pygame_gui.UIManager(Config.SCREEN_DIMENSIONS, Config.theme_path())
 pygame.display.set_caption("Snake Game")
 
 
@@ -33,6 +28,8 @@ def main():
 
     # Create instance of the Game class and include also the GUI manager
     game = Game(screen, manager)
+    # Create the game clock object for limiting the FPS
+    clock = pygame.time.Clock()
 
     # Game Loop
     running = True
