@@ -26,7 +26,7 @@ class Config:
     SNAKE_LIFETIME = 100
 
     # FOOD CONSTANTS
-    FOOD_SIZE = 35
+    FOOD_SIZE = 40
     FOOD_SPAWN_DELAY = 1000
 
     # BASE PATH

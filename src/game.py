@@ -31,6 +31,8 @@ class Game:
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
+        # Load the game background
+        self.bg = pygame.image.load(Config.assets_path("background.png"))
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object
@@ -93,6 +95,9 @@ class Game:
         """
         Draws the game objects on the screen.
         """
+        # Draw the background first
+        self.screen.blit(self.bg, (0, 0))
+        # Draw the game objects
         self.apple.draw(self.screen)
         self.snake.draw(self.screen)
 

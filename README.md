@@ -85,6 +85,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added an apple sprite to the food class.
 - April 12, 2024
   - Added config class to store all game configurations. Refactored all current config codes.
+  - Added game background and adjusted regen label readability and apple shadow.
   
 <br>
 <b>This project is currently under development.</b>
