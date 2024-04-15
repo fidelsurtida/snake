@@ -88,6 +88,6 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added game background and adjusted regen label readability and apple shadow.
 - April 15, 2024
   - Added Panel Background and added starting game fonts for the panel labels.
-  
+  - Added Icons for the game panel and added game regen heart icon.
 <br>
 <b>This project is currently under development.</b>

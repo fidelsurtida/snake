@@ -10,6 +10,7 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import pygame_gui
+from src.config import Config
 from enum import Enum
 
 
@@ -33,6 +34,8 @@ class Interface:
         self._WIDTH = screen.get_width()
         self._HEIGHT = screen.get_height()
 
+        # Load first the icons image for later subsurface use
+        self.icons = pygame.image.load(Config.assets_path("icons.png"))
         # Initialize all the GUI elements for PLAY state
         self._initialize_play_elements()
         # Container for tracking the regen labels for animation
@@ -44,7 +47,7 @@ class Interface:
         """
         score_width = 200
         lifetime_width = 200
-        stretch_width = 180
+        stretch_width = 185
 
         # Create game panel strip at the top of the screen
         self.game_panel = pygame_gui.elements.UIPanel(
@@ -59,9 +62,16 @@ class Interface:
         )
         # Create the lifetime label
         self._lifetime_lbl = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(20, 0, lifetime_width, 35),
+            relative_rect=pygame.Rect(45, 0, lifetime_width, 35),
             text="LIFETIME: 100", container=self.game_panel,
             object_id="#lifetime_lbl"
+        )
+        # Create the life icon
+        self.heart_icon = self.icons.subsurface((0, 0, 65, 60))
+        self._life_icon = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(10, 2, 30, 30),
+            image_surface=self.heart_icon,
+            container=self.game_panel
         )
         # Create the stretch label (length of the snake)
         stretch_pos_x = self.game_panel.rect.width - stretch_width
@@ -70,28 +80,45 @@ class Interface:
             text="STRETCH: 0m", container=self.game_panel,
             object_id="#stretch_lbl"
         )
+        # Create the stretch icon
+        self._stretch_icon = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(stretch_pos_x - 35, 2, 30, 30),
+            image_surface=self.icons.subsurface((65, 0, 55, 55)),
+            container=self.game_panel
+        )
 
     def update(self):
         """ Updates manually some of the animations for GUI elements. """
-        for label in self._regen_labels:
-            x, y = label.rect.topleft
-            label.set_relative_position((x, y-1))
+        for label, heart in self._regen_labels:
+            (x1, y1), (x2, y2) = label.rect.topleft, heart.rect.topleft
+            label.set_relative_position((x1, y1-1))
+            heart.set_relative_position((x2, y2-1))
 
     def process_events(self, event):
         """ Checks for events related to pygame_gui elements."""
         # TEXT EFFECT FINISHED EVENT
         if event.type == pygame_gui.UI_TEXT_EFFECT_FINISHED:
             if event.ui_element.get_object_id() == "@regen_lbl":
-                self._regen_labels.remove(event.ui_element)
-                event.ui_element.kill()
+                # Find the label element with heart pair to kill and remove
+                for pair in self._regen_labels:
+                    if event.ui_element in pair:
+                        label, heart = pair
+                        label.kill()
+                        heart.kill()
+                        self._regen_labels.remove(pair)
+                        break
 
     def spawn_regen_label(self, position, regen):
         """ Spawns a label that shows the regen stat after eating food. """
         hp_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(position.x, position.y-30, 60, 40),
+            relative_rect=pygame.Rect(position.x-30, position.y-30, 60, 40),
             text=f"+{regen}", object_id="@regen_lbl"
         )
-        self._regen_labels.append(hp_label)
+        heart_image = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(position.x+25, position.y-20, 25, 25),
+            image_surface=self.heart_icon
+        )
+        self._regen_labels.append((hp_label, heart_image))
         hp_label.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_OUT,
                                    {"time_per_alpha_change": 6})
 
