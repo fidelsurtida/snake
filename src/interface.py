@@ -89,7 +89,7 @@ class Interface:
         """ Spawns a label that shows the regen stat after eating food. """
         hp_label = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect(position.x, position.y-30, 60, 40),
-            text=f"+{regen}♥", object_id="@regen_lbl"
+            text=f"+{regen}", object_id="@regen_lbl"
         )
         self._regen_labels.append(hp_label)
         hp_label.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_OUT,

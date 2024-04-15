@@ -12,8 +12,37 @@
       }
    },
 
+   "#designer_font":
+   {
+      "font":
+      {
+         "name": "Designer",
+         "size": "20",
+         "regular_resource":
+         {
+            "package": "assets.fonts",
+            "resource": "Designer.otf"
+         }
+      }
+   },
+
+   "#nicolast_font":
+   {
+      "font":
+      {
+         "name": "Nicolast",
+         "size": "20",
+         "regular_resource":
+         {
+            "package": "assets.fonts",
+            "resource": "Nicolast.ttf"
+         }
+      }
+   },
+
    "@regen_lbl":
    {
+      "prototype": "#nicolast_font",
       "colours":
       {
          "normal_text": "#47FF49",
@@ -21,45 +50,74 @@
       },
       "font":
       {
-         "size": "26",
-         "bold": "2"
+         "size": "34"
       },
       "misc":
       {
-         "text_shadow_size": "1"
+         "text_shadow_size": "2"
       }
    },
 
    "#score_lbl":
    {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "normal_text": "#222",
+         "text_shadow": "white"
+      },
+      "font":
+      {
+         "size": "24"
+      },
       "misc":
       {
-         "text_horiz_alignment": "center"
+         "text_horiz_alignment": "center",
+         "text_shadow_size": "1"
       }
    },
 
    "#lifetime_lbl":
    {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "text_shadow": "#ddd"
+      },
       "misc":
       {
-         "text_horiz_alignment": "left"
+         "text_horiz_alignment": "left",
+         "text_shadow_size": "1"
       }
    },
 
    "#stretch_lbl":
    {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "text_shadow": "#ddd"
+      },
+      "font":
+      {
+         "size": "18"
+      },
       "misc":
       {
-         "text_horiz_alignment": "left"
+         "text_horiz_alignment": "left",
+         "text_shadow_size": "1"
       }
    },
 
    "#game_panel":
    {
-      "colours":
+      "images":
       {
-         "dark_bg": "#bcbcbc",
-         "normal_border": "#bcbcbc,#aaa,#555,-90"
+         "background_image":
+         {
+            "package": "assets",
+            "resource": "panel.png"
+         }
       },
       "misc":
       {
