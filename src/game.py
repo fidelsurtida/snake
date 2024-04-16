@@ -11,6 +11,7 @@ import pygame
 import pygame_gui
 from interface import Interface
 from src.config import Config
+from src.config import GAMESTATE
 from src.objects.snake import Snake
 from src.objects.food import Food
 
@@ -25,6 +26,7 @@ class Game:
         self.WIDTH = Config.SCREEN_WIDTH
         self.screen = screen
         self.manager = manager
+        self.state = GAMESTATE.MENU
         self.bounderies = pygame.Rect(-Snake.SIZE, 0,
                                       self.WIDTH + Snake.SIZE * 2,
                                       self.HEIGHT + Snake.SIZE)
@@ -35,8 +37,9 @@ class Game:
         self.bg = pygame.image.load(Config.assets_path("background.png"))
         # Create the Snake object as the player
         self.snake = Snake()
-        # Create a starting Food Object
-        self.apple = Food(filename="apple.png", points=10, regen=2)
+        # Create a starting Food Object (call this after play button event)
+        self.apple = None
+        # self.apple = Food(filename="apple.png", points=10, regen=2)
         # Score of the current game
         self.score = 0
 
@@ -45,16 +48,19 @@ class Game:
         Handles the game logic. Updates the game objects and status.
         This also is passed the time_delta computation from the main loop.
         """
-        # Reduce the life of the player based on the passed time
-        self.snake.lifetime -= time_delta
-        self.interface.update_lifetime(max(0, self.snake.lifetime))
+        # HANDLE PLAY UPDATES
+        if self.state == GAMESTATE.PLAY:
+            # Reduce the life of the player based on the passed time
+            self.snake.lifetime -= time_delta
+            self.interface.update_lifetime(max(0, self.snake.lifetime))
+
+            # Update the snake if it collides with the food and eats it
+            self.snake_eat_food_update()
 
         # Update the movement of the snake
         self.snake.update()
         # Update the snake to loop its movement after hitting the bounderies
         self.snake_loop_bounderies_update()
-        # Update the snake if it collides with the food and eats it
-        self.snake_eat_food_update()
 
         # Update the Interface Manager for animation of some elements
         self.interface.update()
@@ -98,8 +104,12 @@ class Game:
         # Draw the background first
         self.screen.blit(self.bg, (0, 0))
         # Draw the game objects
-        self.apple.draw(self.screen)
         self.snake.draw(self.screen)
+
+        # Draw game objects that are only viewable in PLAY mode
+        if self.state == GAMESTATE.PLAY:
+            self.apple.draw(self.screen)
+
         # Draw the GUI elements from Inteface
         self.interface.draw()
 

@@ -11,15 +11,8 @@ Author: Fidel Jesus O. Surtida I
 import pygame
 import pygame_gui
 from src.config import Config
+from src.config import GAMESTATE
 from src.objects.floater import Floater
-from enum import Enum
-
-
-class GAMESTATE(Enum):
-    """ Used for determining the current state of the game. """
-    MENU = 0
-    PLAY = 1
-    GAMEOVER = 2
 
 
 class Interface:
@@ -31,16 +24,45 @@ class Interface:
         """
         self.screen = screen
         self.manager = manager
-        self.state = GAMESTATE.PLAY
+        self.state = GAMESTATE.MENU
         self._WIDTH = screen.get_width()
         self._HEIGHT = screen.get_height()
 
         # Load first the icons image for later subsurface use
         self.icons = pygame.image.load(Config.assets_path("icons.png"))
+        # Initialize all the GUI elements for MENU state
+        self._initialize_menu_elements()
         # Initialize all the GUI elements for PLAY state
         self._initialize_play_elements()
         # Container for tracking all the floaters that will be spawned
         self._floaters = []
+
+    def _initialize_menu_elements(self):
+        """
+        Creates the GUI for the MENU state of the game.
+        """
+        wtitle, htitle = self._WIDTH-300, 100
+        bwidth, bheight = 180, 65
+        xtitle, ytitle = (self._WIDTH-wtitle) / 2, (self._HEIGHT-htitle) / 2-80
+        xbtn, ybtn = (self._WIDTH-bwidth) / 2, ytitle + htitle + 40
+
+        # Create a black transparent menu panel
+        self.menu_panel = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(-5, -5, self._WIDTH+10, self._HEIGHT+10),
+            starting_height=10, manager=self.manager, object_id="#menu_panel"
+        )
+        # Create the Game Title
+        pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(xtitle, ytitle, wtitle, htitle),
+            text="SNAKE GAME", container=self.menu_panel,
+            object_id="#game_title_lbl"
+        )
+        # Create the Start Button of the Menu
+        self._start_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
+            text="START", container=self.menu_panel,
+            object_id="#start_btn"
+        )
 
     def _initialize_play_elements(self):
         """
@@ -53,8 +75,9 @@ class Interface:
         # Create game panel strip at the top of the screen
         self.game_panel = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect(0, -5, self._WIDTH, 50),
-            starting_height=10, manager=self.manager, object_id="#game_panel"
+            starting_height=5, manager=self.manager, object_id="#game_panel"
         )
+        self.game_panel.hide()
         # Create the score label
         score_pos_x = self.game_panel.rect.center[0] - (score_width / 2) - 10
         self._score_lbl = pygame_gui.elements.UILabel(
@@ -69,7 +92,7 @@ class Interface:
         )
         # Create the life icon
         self.heart_icon = self.icons.subsurface((0, 0, 65, 60))
-        self._life_icon = pygame_gui.elements.UIImage(
+        pygame_gui.elements.UIImage(
             relative_rect=pygame.Rect(10, 2, 30, 30),
             image_surface=self.heart_icon,
             container=self.game_panel
@@ -82,7 +105,7 @@ class Interface:
             object_id="#stretch_lbl"
         )
         # Create the stretch icon
-        self._stretch_icon = pygame_gui.elements.UIImage(
+        pygame_gui.elements.UIImage(
             relative_rect=pygame.Rect(stretch_pos_x - 35, 2, 30, 30),
             image_surface=self.icons.subsurface((65, 0, 55, 55)),
             container=self.game_panel
@@ -90,13 +113,17 @@ class Interface:
 
     def update(self):
         """ Updates manually some of the animations for GUI elements. """
-        for floater in self._floaters:
-            floater.update()
+        match self.state:
+            case GAMESTATE.PLAY:
+                for floater in self._floaters:
+                    floater.update()
 
     def draw(self):
         """ Draws some GUI elements that are not included in the Manager. """
-        for floater in self._floaters:
-            floater.draw(self.screen)
+        match self.state:
+            case GAMESTATE.PLAY:
+                for floater in self._floaters:
+                    floater.draw(self.screen)
 
     def process_events(self, event):
         """ Checks for events related to pygame_gui elements."""

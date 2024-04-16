@@ -92,5 +92,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 16, 2024
   - Added the Floater Class to encapsulate the UILabel and Icon for status
     text that floats after an action by the player.
+  - Implementation of the Menu Panel with title and start button.
+
 <br>
 <b>This project is currently under development.</b>

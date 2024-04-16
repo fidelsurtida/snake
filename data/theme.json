@@ -54,6 +54,52 @@
       }
    },
 
+   "#game_title_lbl":
+   {
+      "prototype": "#nicolast_font",
+      "colours":
+      {
+         "normal_text": "#55db0d,#3ca305,#095e1a,-90",
+         "text_shadow": "#d1fcb8"
+      },
+      "font":
+      {
+         "size": "100"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "center",
+         "text_shadow_size": "3"
+      }
+   },
+
+   "#start_btn":
+   {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "normal_bg": "#0a82f2,#0b68bf,#094f91,-90",
+         "normal_border": "#0a82f2,#062d6b,-90",
+         "hovered_bg": "#0997d9,#026ead,-90",
+         "hovered_border": "#0ab4f2,#004a8f,-90",
+         "normal_text": "#ccc",
+         "hovered_text": "white",
+         "active_text": "#5eb1ff",
+         "active_bg": "#054785,#021733,-90",
+         "active_border": "#055cad,#053a6e,-90"
+      },
+      "font":
+      {
+         "size": "30"
+      },
+      "misc":
+      {
+         "shape": "rounded_rectangle",
+         "shape_corner_radius": "15",
+         "border_width": "5"
+      }
+   },
+
    "@regen_lbl":
    {
       "prototype": "#snakeboot_font",
@@ -132,6 +178,14 @@
       "misc":
       {
          "border_width": "5"
+      }
+   },
+
+   "#menu_panel":
+   {
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 100)"
       }
    }
 }

@@ -11,6 +11,14 @@ Author: Fidel Jesus O. Surtida I
 --------------------------------------------------
 """
 from pathlib import Path
+from enum import Enum
+
+
+class GAMESTATE(Enum):
+    """ Used for determining the current state of the game. """
+    MENU = 0
+    PLAY = 1
+    GAMEOVER = 2
 
 
 class Config:
