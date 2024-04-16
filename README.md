@@ -93,6 +93,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added the Floater Class to encapsulate the UILabel and Icon for status
     text that floats after an action by the player.
   - Implementation of the Menu Panel with title and start button.
+  - Added snake auto random movement Menu Panel.
 
 <br>
 <b>This project is currently under development.</b>

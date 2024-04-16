@@ -9,6 +9,7 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import pygame_gui
+import random
 from interface import Interface
 from src.config import Config
 from src.config import GAMESTATE
@@ -35,6 +36,9 @@ class Game:
         self.interface = Interface(screen, manager)
         # Load the game background
         self.bg = pygame.image.load(Config.assets_path("background.png"))
+        # These variables are used in the menu for snake auto path
+        self._auto_path_counter = 0
+        self._uturn = False
         # Create the Snake object as the player
         self.snake = Snake()
         # Create a starting Food Object (call this after play button event)
@@ -48,8 +52,13 @@ class Game:
         Handles the game logic. Updates the game objects and status.
         This also is passed the time_delta computation from the main loop.
         """
+        # HANDLE MENU UPDATES
+        if self.state == GAMESTATE.MENU:
+            # Update the snake for the menu auto path
+            self.snake_menu_auto_path_update(time_delta)
+
         # HANDLE PLAY UPDATES
-        if self.state == GAMESTATE.PLAY:
+        elif self.state == GAMESTATE.PLAY:
             # Reduce the life of the player based on the passed time
             self.snake.lifetime -= time_delta
             self.interface.update_lifetime(max(0, self.snake.lifetime))
@@ -80,16 +89,17 @@ class Game:
             # Pass the event also to the interface manager
             self.interface.process_events(event)
 
-            # KEYBOARD EVENTS
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    self.snake.move(Snake.LEFT)
-                if event.key == pygame.K_d:
-                    self.snake.move(Snake.RIGHT)
-                if event.key == pygame.K_w:
-                    self.snake.move(Snake.UP)
-                if event.key == pygame.K_s:
-                    self.snake.move(Snake.DOWN)
+            # PLAY KEYBOARD EVENTS
+            if self.state == GAMESTATE.PLAY:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        self.snake.move(Snake.LEFT)
+                    if event.key == pygame.K_d:
+                        self.snake.move(Snake.RIGHT)
+                    if event.key == pygame.K_w:
+                        self.snake.move(Snake.UP)
+                    if event.key == pygame.K_s:
+                        self.snake.move(Snake.DOWN)
 
             # SPAWN FOOD EVENT
             if event.type == Food.SPAWN_FOOD_EVENT:
@@ -112,6 +122,42 @@ class Game:
 
         # Draw the GUI elements from Inteface
         self.interface.draw()
+
+    def snake_menu_auto_path_update(self, time_delta):
+        """
+        This will randomize the movement of the snake in the menu.
+        It must not go over the top and bottom side of window because
+        the game panel is currently hidden in the MENU state.
+        Every 2 seconds it will randomize a direction of the head.
+        """
+        xhead, yhead = self.snake.head.bounds.topleft
+        direction = self.snake.head.direction
+        topmax, botmax = 70, self.HEIGHT - 70
+        leftmax, rightmax = 80, self.WIDTH - 80
+
+        if not self._uturn and (yhead < topmax or yhead > botmax):
+            self.snake.move(random.choice([Snake.LEFT, Snake.RIGHT]))
+            self._auto_path_counter = 0
+            self._uturn = True
+
+        if self._auto_path_counter >= 2 and (leftmax < xhead < rightmax):
+            # If uturn, then directly change the direction
+            if self._uturn:
+                movement = Snake.DOWN if yhead < topmax else Snake.UP
+                self.snake.move(movement)
+                self._uturn = False
+
+            # Remove the current direction and its opposite direction
+            moves = [Snake.UP, Snake.DOWN, Snake.LEFT, Snake.RIGHT]
+            to_remove = [direction, direction * -1]
+            moves = [move for move in moves if move not in to_remove]
+
+            # Randomize the next valid moves
+            next_move = random.choice(moves)
+            self.snake.move(next_move)
+            self._auto_path_counter = 0
+
+        self._auto_path_counter += time_delta
 
     def snake_loop_bounderies_update(self):
         """
