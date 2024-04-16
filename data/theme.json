@@ -40,17 +40,27 @@
       }
    },
 
+   "#snakeboot_font":
+   {
+      "font":
+      {
+         "name": "SnakeBoot",
+         "size": "20",
+         "regular_resource":
+         {
+            "package": "assets.fonts",
+            "resource": "SnakeBoot.ttf"
+         }
+      }
+   },
+
    "@regen_lbl":
    {
-      "prototype": "#nicolast_font",
+      "prototype": "#snakeboot_font",
       "colours":
       {
          "normal_text": "#47FF49",
          "text_shadow": "#038e05"
-      },
-      "font":
-      {
-         "size": "34"
       },
       "misc":
       {

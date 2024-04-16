@@ -100,6 +100,8 @@ class Game:
         # Draw the game objects
         self.apple.draw(self.screen)
         self.snake.draw(self.screen)
+        # Draw the GUI elements from Inteface
+        self.interface.draw()
 
     def snake_loop_bounderies_update(self):
         """

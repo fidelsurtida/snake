@@ -11,6 +11,7 @@ Author: Fidel Jesus O. Surtida I
 import pygame
 import pygame_gui
 from src.config import Config
+from src.objects.floater import Floater
 from enum import Enum
 
 
@@ -38,8 +39,8 @@ class Interface:
         self.icons = pygame.image.load(Config.assets_path("icons.png"))
         # Initialize all the GUI elements for PLAY state
         self._initialize_play_elements()
-        # Container for tracking the regen labels for animation
-        self._regen_labels = []
+        # Container for tracking all the floaters that will be spawned
+        self._floaters = []
 
     def _initialize_play_elements(self):
         """
@@ -52,7 +53,7 @@ class Interface:
         # Create game panel strip at the top of the screen
         self.game_panel = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect(0, -5, self._WIDTH, 50),
-            starting_height=1, manager=self.manager, object_id="#game_panel"
+            starting_height=10, manager=self.manager, object_id="#game_panel"
         )
         # Create the score label
         score_pos_x = self.game_panel.rect.center[0] - (score_width / 2) - 10
@@ -89,38 +90,32 @@ class Interface:
 
     def update(self):
         """ Updates manually some of the animations for GUI elements. """
-        for label, heart in self._regen_labels:
-            (x1, y1), (x2, y2) = label.rect.topleft, heart.rect.topleft
-            label.set_relative_position((x1, y1-1))
-            heart.set_relative_position((x2, y2-1))
+        for floater in self._floaters:
+            floater.update()
+
+    def draw(self):
+        """ Draws some GUI elements that are not included in the Manager. """
+        for floater in self._floaters:
+            floater.draw(self.screen)
 
     def process_events(self, event):
         """ Checks for events related to pygame_gui elements."""
         # TEXT EFFECT FINISHED EVENT
         if event.type == pygame_gui.UI_TEXT_EFFECT_FINISHED:
             if event.ui_element.get_object_id() == "@regen_lbl":
-                # Find the label element with heart pair to kill and remove
-                for pair in self._regen_labels:
-                    if event.ui_element in pair:
-                        label, heart = pair
-                        label.kill()
-                        heart.kill()
-                        self._regen_labels.remove(pair)
+                # Find the label element in the floater to destroy
+                for floater in self._floaters:
+                    if event.ui_element == floater.label:
+                        floater.destroy()
+                        self._floaters.remove(floater)
                         break
 
     def spawn_regen_label(self, position, regen):
         """ Spawns a label that shows the regen stat after eating food. """
-        hp_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(position.x-30, position.y-30, 60, 40),
-            text=f"+{regen}", object_id="@regen_lbl"
-        )
-        heart_image = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect(position.x+25, position.y-20, 25, 25),
-            image_surface=self.heart_icon
-        )
-        self._regen_labels.append((hp_label, heart_image))
-        hp_label.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_OUT,
-                                   {"time_per_alpha_change": 6})
+        floater = Floater(name="regen", position=position,
+                          dimension=(45, 40), text=f"+{regen}",
+                          icon=self.heart_icon, isize=30)
+        self._floaters.append(floater)
 
     def update_score(self, score):
         """ Updates the score label with current score of the game. """

@@ -89,5 +89,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 15, 2024
   - Added Panel Background and added starting game fonts for the panel labels.
   - Added Icons for the game panel and added game regen heart icon.
+- April 16, 2024
+  - Added the Floater Class to encapsulate the UILabel and Icon for status
+    text that floats after an action by the player.
 <br>
 <b>This project is currently under development.</b>
