@@ -94,6 +94,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
     text that floats after an action by the player.
   - Implementation of the Menu Panel with title and start button.
   - Added snake auto random movement Menu Panel.
+- April 17, 2024
+  - Implementation of Start Button and game panel slide animation.
 
 <br>
 <b>This project is currently under development.</b>

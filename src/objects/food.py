@@ -23,7 +23,7 @@ class Food(Sprite):
     SPAWN_DELAY = Config.FOOD_SPAWN_DELAY
 
     # Class Event Constant
-    SPAWN_FOOD_EVENT = pygame.USEREVENT + 1
+    SPAWN_FOOD_EVENT = pygame.USEREVENT + 100
 
     def __init__(self, *, filename, points, regen):
         """

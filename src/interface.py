@@ -58,7 +58,7 @@ class Interface:
             object_id="#game_title_lbl"
         )
         # Create the Start Button of the Menu
-        self._start_btn = pygame_gui.elements.UIButton(
+        self.start_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
             text="START", container=self.menu_panel,
             object_id="#start_btn"
@@ -74,7 +74,7 @@ class Interface:
 
         # Create game panel strip at the top of the screen
         self.game_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(0, -5, self._WIDTH, 50),
+            relative_rect=pygame.Rect(0, -55, self._WIDTH, 50),
             starting_height=5, manager=self.manager, object_id="#game_panel"
         )
         self.game_panel.hide()
@@ -115,6 +115,12 @@ class Interface:
         """ Updates manually some of the animations for GUI elements. """
         match self.state:
             case GAMESTATE.PLAY:
+                # Animate the gamepanel to go down when the game starts
+                if self.game_panel.rect.y < -5:
+                    pos = pygame.Vector2(self.game_panel.rect.topleft)
+                    self.game_panel.set_position(pos + pygame.Vector2(0, 1))
+
+                # Update the floaters if it exists
                 for floater in self._floaters:
                     floater.update()
 
@@ -136,6 +142,12 @@ class Interface:
                         floater.destroy()
                         self._floaters.remove(floater)
                         break
+
+    def start_game_event(self):
+        """ Sets the gamestate and hides the menu panel. """
+        self.state = GAMESTATE.PLAY
+        self.menu_panel.hide()
+        self.game_panel.show()
 
     def spawn_regen_label(self, position, regen):
         """ Spawns a label that shows the regen stat after eating food. """

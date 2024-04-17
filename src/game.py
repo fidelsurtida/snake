@@ -43,7 +43,6 @@ class Game:
         self.snake = Snake()
         # Create a starting Food Object (call this after play button event)
         self.apple = None
-        # self.apple = Food(filename="apple.png", points=10, regen=2)
         # Score of the current game
         self.score = 0
 
@@ -100,6 +99,15 @@ class Game:
                         self.snake.move(Snake.UP)
                     if event.key == pygame.K_s:
                         self.snake.move(Snake.DOWN)
+
+            # GUI BUTTON EVENTS
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                # START BUTTON EVENT
+                if event.ui_element == self.interface.start_btn:
+                    self.state = GAMESTATE.PLAY
+                    self.interface.start_game_event()
+                    # Instatiate the apple food
+                    self.apple = Food(filename="apple.png", points=10, regen=2)
 
             # SPAWN FOOD EVENT
             if event.type == Food.SPAWN_FOOD_EVENT:
