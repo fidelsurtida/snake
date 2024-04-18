@@ -39,8 +39,8 @@ class Game:
         # These variables are used in the menu for snake auto path
         self._auto_path_counter = 0
         self._uturn = False
-        # Create the Snake object as the player
-        self.snake = Snake()
+        # Create the Snake object as the player and pass the game background
+        self.snake = Snake(background=self.bg)
         # Create a starting Food Object (call this after play button event)
         self.apple = None
         # Score of the current game
@@ -66,7 +66,7 @@ class Game:
             self.snake_eat_food_update()
 
         # Update the movement of the snake
-        self.snake.update()
+        self.snake.update(time_delta)
         # Update the snake to loop its movement after hitting the bounderies
         self.snake_loop_bounderies_update()
 

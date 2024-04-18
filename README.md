@@ -96,6 +96,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added snake auto random movement Menu Panel.
 - April 17, 2024
   - Implementation of Start Button and game panel slide animation.
+- April 18, 2024
+  - Implementation of the Snake Sprite with the correct turn covers.
 
 <br>
 <b>This project is currently under development.</b>
