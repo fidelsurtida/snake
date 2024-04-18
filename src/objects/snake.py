@@ -44,9 +44,11 @@ class Snake:
 
         # Snake Variables
         self._locked_direction = False
+        self._head_index = 0
+        self._time_frame = 0
         self.direction = Snake.UP
         self.head = SnakePart(posx, posy, direction=Snake.UP,
-                              image=self._headimg)
+                              image=self._headimg[self._head_index])
         self.body = []
         self.tails = []
         self.covers = []
@@ -62,10 +64,17 @@ class Snake:
         Loads the snake sprite parts from the snake sprite sheet.
         It also resizes the covers to the correct snake size config.
         """
+        # Load the main snake sprite sheet
         snake_sheet = pygame.image.load(Config.assets_path("snake.png"))
-        self._headimg = snake_sheet.subsurface((1, 1, 40, 40))
+        # Get the head animation sprite images
+        self._headimg = [
+            snake_sheet.subsurface((1, 1, 40, 42)),
+            snake_sheet.subsurface((1, 45, 40, 40)),
+            snake_sheet.subsurface((1, 85, 40, 40))
+        ]
         self._bodyimg = snake_sheet.subsurface((85, 85, 40, 40))
         self._tailimg = snake_sheet.subsurface((43, 85, 40, 40))
+        # Get the 4 different turn parts image
         surfaces = [
             snake_sheet.subsurface((43, 1, 40, 40)),   # TOPLEFT
             snake_sheet.subsurface((85, 1, 40, 40)),   # TOPRIGHT
@@ -136,6 +145,13 @@ class Snake:
         for cover in self.covers[:]:
             if cover.update(time_delta):
                 self.covers.remove(cover)
+
+        # Updates the head sprite animation index
+        self._time_frame += time_delta
+        if self._time_frame > 0.08:
+            self._head_index = (self._head_index + 1) % 3
+            self.head.change_sprite(self._headimg[self._head_index])
+            self._time_frame = 0
 
     def draw(self, screen):
         """ Draws the snake parts with body first then lastly the head. """
@@ -211,7 +227,7 @@ class Snake:
     @property
     def stretch(self):
         """ Gets the total stretch of the snake excluding the initial parts. """
-        return (len(self.body) - 2) * Snake.SIZE // 10
+        return len(self.body) - 2
 
 
 class SnakePart(Sprite):
