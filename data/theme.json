@@ -54,6 +54,20 @@
       }
    },
 
+   "#doctorglitch_font":
+   {
+      "font":
+      {
+         "name": "DoctorGlitch",
+         "size": "20",
+         "regular_resource":
+         {
+            "package": "assets.fonts",
+            "resource": "DoctorGlitch.otf"
+         }
+      }
+   },
+
    "#game_title_lbl":
    {
       "prototype": "#nicolast_font",
@@ -70,6 +84,25 @@
       {
          "text_horiz_alignment": "center",
          "text_shadow_size": "3"
+      }
+   },
+
+   "#gameover_lbl":
+   {
+      "prototype": "#doctorglitch_font",
+      "colours":
+      {
+         "normal_text": "#FF5353,#E72F2F,#490000,-90",
+         "text_shadow": "#610707"
+      },
+      "font":
+      {
+         "size": "105"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "center",
+         "text_shadow_size": "4"
       }
    },
 
@@ -98,6 +131,11 @@
          "shape_corner_radius": "15",
          "border_width": "5"
       }
+   },
+
+   "#restart_btn":
+   {
+      "prototype": "#start_btn"
    },
 
    "@regen_lbl":
@@ -186,6 +224,14 @@
       "colours":
       {
          "dark_bg": "rgba(0, 0, 0, 100)"
+      }
+   },
+
+   "#gameover_panel":
+   {
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 170)"
       }
    }
 }

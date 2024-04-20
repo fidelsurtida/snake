@@ -53,9 +53,9 @@ class Snake:
         self.tails = []
         self.covers = []
         self.lifetime = Snake.LIFETIME
-        for i in range(1, 4):
+        for i in range(1, 5):
             # Seperate the tail sprite into the last element
-            sprite = self._bodyimg if i < 3 else self._tailimg
+            sprite = self._bodyimg if i < 4 else self._tailimg
             self.body.append(SnakePart(posx, posy + Snake.SIZE * i,
                                        direction=Snake.UP, image=sprite))
 
@@ -228,7 +228,7 @@ class Snake:
     @property
     def stretch(self):
         """ Gets the total stretch of the snake excluding the initial parts. """
-        return len(self.body) - 2
+        return len(self.body) - 3
 
 
 class SnakePart(Sprite):

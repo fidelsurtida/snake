@@ -101,6 +101,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added snake head animation and updated stretch computation.
 - April 20, 2024
   - Added snake shadow in sprite and fixed turn cover outside the screen.
+  - Implemented the Game Over Screen. Added checker for collision with head 
+    and body parts to trigger the game over state.
 
 <br>
 <b>This project is currently under development.</b>

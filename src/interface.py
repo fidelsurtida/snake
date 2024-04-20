@@ -34,6 +34,8 @@ class Interface:
         self._initialize_menu_elements()
         # Initialize all the GUI elements for PLAY state
         self._initialize_play_elements()
+        # Initialize all the GUI elements for GAMEOVER state
+        self._initialize_gameover_elements()
         # Container for tracking all the floaters that will be spawned
         self._floaters = []
 
@@ -62,6 +64,35 @@ class Interface:
             relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
             text="START", container=self.menu_panel,
             object_id="#start_btn"
+        )
+
+    def _initialize_gameover_elements(self):
+        """
+        Creates the GUI for the GAMEOVER state of the game.
+        """
+        wtitle, htitle = self._WIDTH - 320, 120
+        bwidth, bheight = 210, 65
+        xtitle, ytitle = (self._WIDTH-wtitle) / 2, (self._HEIGHT-htitle) / 2-80
+        xbtn, ybtn = (self._WIDTH - bwidth) / 2, ytitle + htitle + 40
+
+        # Create a black transparent gameover panel
+        self.gameover_panel = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(-5, -5, self._WIDTH+10, self._HEIGHT+10),
+            starting_height=10, manager=self.manager,
+            object_id="#gameover_panel"
+        )
+        self.gameover_panel.hide()
+        # Create the game over title label
+        pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(xtitle, ytitle, wtitle, htitle),
+            text="GAME OVER", container=self.gameover_panel,
+            object_id="#gameover_lbl"
+        )
+        # Create the restart button
+        self.restart_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
+            text="RESTART", container=self.gameover_panel,
+            object_id="#restart_btn"
         )
 
     def _initialize_play_elements(self):
@@ -124,6 +155,12 @@ class Interface:
                 for floater in self._floaters:
                     floater.update()
 
+            case GAMESTATE.GAMEOVER:
+                # Animate the gamepanel to go up when the game ends
+                if self.game_panel.rect.y > -55:
+                    pos = pygame.Vector2(self.game_panel.rect.topleft)
+                    self.game_panel.set_position(pos - pygame.Vector2(0, 1))
+
     def draw(self):
         """ Draws some GUI elements that are not included in the Manager. """
         match self.state:
@@ -148,6 +185,11 @@ class Interface:
         self.state = GAMESTATE.PLAY
         self.menu_panel.hide()
         self.game_panel.show()
+
+    def gameover_event(self):
+        """ Sets the gamestate and shows the gameover panel. """
+        self.state = GAMESTATE.GAMEOVER
+        self.gameover_panel.show()
 
     def spawn_regen_label(self, position, regen):
         """ Spawns a label that shows the regen stat after eating food. """

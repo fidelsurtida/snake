@@ -36,8 +36,9 @@ class Game:
         self.interface = Interface(screen, manager)
         # Load the game background
         self.bg = pygame.image.load(Config.assets_path("background.png"))
-        # These variables are used in the menu for snake auto path
+        # These variables are used for various flags regarding the snake
         self._auto_path_counter = 0
+        self._gameover_counter = 0.12
         self._uturn = False
         # Create the Snake object as the player and pass the game background
         self.snake = Snake(background=self.bg)
@@ -64,11 +65,15 @@ class Game:
 
             # Update the snake if it collides with the food and eats it
             self.snake_eat_food_update()
+            # Check if the snake head collides with its body parts
+            self.snake_collide_self_checker(time_delta)
 
-        # Update the movement of the snake
-        self.snake.update(time_delta)
-        # Update the snake to loop its movement after hitting the bounderies
-        self.snake_loop_bounderies_update()
+        # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
+        if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
+            # Update the movement of the snake
+            self.snake.update(time_delta)
+            # Update the snake to loop its movement after hitting the bounderies
+            self.snake_loop_bounderies_update()
 
         # Update the Interface Manager for animation of some elements
         self.interface.update()
@@ -140,8 +145,8 @@ class Game:
         """
         xhead, yhead = self.snake.head.bounds.topleft
         direction = self.snake.head.direction
-        topmax, botmax = 70, self.HEIGHT - 70
-        leftmax, rightmax = 80, self.WIDTH - 80
+        topmax, botmax = 90, self.HEIGHT - 90
+        leftmax, rightmax = 100, self.WIDTH - 100
 
         if not self._uturn and (yhead < topmax or yhead > botmax):
             self.snake.move(random.choice([Snake.LEFT, Snake.RIGHT]))
@@ -199,3 +204,19 @@ class Game:
                 # Destroy the apple and grow the snake
                 self.snake.grow()
                 self.apple.destroy()
+
+    def snake_collide_self_checker(self, time_delta):
+        """
+        Checks if the head part collides with any of the moving snake parts.
+        If the condition is true, reduce the gameover counter delay in order
+        for the snake to collide with its body.
+        """
+        for body in self.snake.body[1:]:
+            if self.snake.head.bounds.colliderect(body.bounds):
+                self._gameover_counter -= time_delta
+                break
+
+        # If the gameover counter reaches zero, then set state to GAMEOVER
+        if self._gameover_counter <= 0:
+            self.state = GAMESTATE.GAMEOVER
+            self.interface.gameover_event()
