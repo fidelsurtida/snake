@@ -99,6 +99,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 18, 2024
   - Implementation of the Snake Sprite with the correct turn covers.
   - Added snake head animation and updated stretch computation.
+- April 20, 2024
+  - Added snake shadow in sprite and fixed turn cover outside the screen.
 
 <br>
 <b>This project is currently under development.</b>

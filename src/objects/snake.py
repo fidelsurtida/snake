@@ -197,9 +197,10 @@ class Snake:
                 existing = [c for c in self.covers if c.rect == cover_rect]
                 # If future_bounds is not found in current covers, create one
                 if not existing:
-                    bg_cover = self.bg.subsurface(cover_rect)
+                    bg_rect = cover_rect.clamp(self.bg.get_rect())
+                    bg_cover = self.bg.subsurface(bg_rect)
                     turn_cover = get_cover(first, second)
-                    snake_cover = SnakeCover(cover_rect, bg_cover, turn_cover)
+                    snake_cover = SnakeCover(cover_rect, turn_cover, bg_cover)
                     self.covers.append(snake_cover)
                 else:
                     # If it exists, reset the delay counter
@@ -339,7 +340,7 @@ class SnakePart(Sprite):
 
 class SnakeCover:
 
-    def __init__(self, cover_rect, bg_cover, turn_cover):
+    def __init__(self, cover_rect, turn_cover, bg_cover=None):
         """
         Initializes a SnakeCover object to cover the turning snake parts.
         It has a delay counter that determines the lifetime of the cover.
@@ -351,7 +352,8 @@ class SnakeCover:
 
     def draw(self, screen):
         """ Draw first the bg_cover then next is the turn_cover. """
-        screen.blit(self._bg_cover, self.rect)
+        if self._bg_cover:
+            screen.blit(self._bg_cover, self.rect)
         screen.blit(self._turn_cover, self.rect)
 
     def update(self, time_delta):
