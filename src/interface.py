@@ -151,15 +151,15 @@ class Interface:
                     pos = pygame.Vector2(self.game_panel.rect.topleft)
                     self.game_panel.set_position(pos + pygame.Vector2(0, 1))
 
-                # Update the floaters if it exists
-                for floater in self._floaters:
-                    floater.update()
-
             case GAMESTATE.GAMEOVER:
                 # Animate the gamepanel to go up when the game ends
                 if self.game_panel.rect.y > -55:
                     pos = pygame.Vector2(self.game_panel.rect.topleft)
                     self.game_panel.set_position(pos - pygame.Vector2(0, 1))
+
+        # Update the floaters if it exists regardless of the state
+        for floater in self._floaters:
+            floater.update()
 
     def draw(self):
         """ Draws some GUI elements that are not included in the Manager. """
@@ -185,6 +185,15 @@ class Interface:
         self.state = GAMESTATE.PLAY
         self.menu_panel.hide()
         self.game_panel.show()
+
+    def restart_game_event(self):
+        """ Restarts a new game and resets the game panel labels. """
+        self.state = GAMESTATE.PLAY
+        self.game_panel.show()
+        self.gameover_panel.hide()
+        self.update_score(0)
+        self.update_lifetime(100)
+        self.update_stretch(0)
 
     def gameover_event(self):
         """ Sets the gamestate and shows the gameover panel. """

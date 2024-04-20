@@ -113,10 +113,20 @@ class Game:
                     self.interface.start_game_event()
                     # Instatiate the apple food
                     self.apple = Food(filename="apple.png", points=10, regen=2)
+                # RESTART BUTTON EVENT
+                elif event.ui_element == self.interface.restart_btn:
+                    self.state = GAMESTATE.PLAY
+                    self.interface.restart_game_event()
+                    # Reset the game objects
+                    self.snake = Snake(background=self.bg)
+                    self.apple = Food(filename="apple.png", points=10, regen=2)
+                    self._gameover_counter = 0.12
+                    self.score = 0
 
             # SPAWN FOOD EVENT
-            if event.type == Food.SPAWN_FOOD_EVENT:
-                self.apple.spawn(off_limits=self.snake.parts)
+            if self.state == GAMESTATE.PLAY:
+                if event.type == Food.SPAWN_FOOD_EVENT:
+                    self.apple.spawn(off_limits=self.snake.parts)
 
         return True
 

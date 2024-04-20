@@ -103,6 +103,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added snake shadow in sprite and fixed turn cover outside the screen.
   - Implemented the Game Over Screen. Added checker for collision with head 
     and body parts to trigger the game over state.
+  - Implementation of Restart button event to reset the game after GAMEOVER.
 
 <br>
 <b>This project is currently under development.</b>
