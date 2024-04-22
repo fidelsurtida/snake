@@ -39,6 +39,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgements
 
 - Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
+- Button Icons downloaded from [Freepik](https://www.freepik.com/)
 
 ## Support
 
@@ -104,6 +105,9 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Implemented the Game Over Screen. Added checker for collision with head 
     and body parts to trigger the game over state.
   - Implementation of Restart button event to reset the game after GAMEOVER.
+- April 22, 2024
+  - Added DeathCam and Quit Button in the Game Over Screen.
+  - Added Icons to Buttons in Main Menu and Game Over Screen.
 
 <br>
 <b>This project is currently under development.</b>

@@ -227,6 +227,14 @@ class Game:
                 break
 
         # If the gameover counter reaches zero, then set state to GAMEOVER
+        # We also need to compute the death moment location of the snake
         if self._gameover_counter <= 0:
             self.state = GAMESTATE.GAMEOVER
             self.interface.gameover_event()
+            # Set the moments image of the snake in the gameover screen
+            width, height, (x, y) = 300, 200, self.snake.head.bounds.topleft
+            snakepos = (x - (width // 3) - 20, y - (height // 3))
+            moments_rect = pygame.Rect(*snakepos, width, height)
+            moments_rect = moments_rect.clamp(self.screen.get_rect())
+            moments = self.screen.subsurface(moments_rect)
+            self.interface.update_moments_image(moments)

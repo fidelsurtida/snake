@@ -44,7 +44,7 @@ class Interface:
         Creates the GUI for the MENU state of the game.
         """
         wtitle, htitle = self._WIDTH-300, 100
-        bwidth, bheight = 180, 65
+        bwidth, bheight = 230, 70
         xtitle, ytitle = (self._WIDTH-wtitle) / 2, (self._HEIGHT-htitle) / 2-80
         xbtn, ybtn = (self._WIDTH-bwidth) / 2, ytitle + htitle + 40
 
@@ -62,18 +62,32 @@ class Interface:
         # Create the Start Button of the Menu
         self.start_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
-            text="START", container=self.menu_panel,
+            text="    START", container=self.menu_panel,
             object_id="#start_btn"
+        )
+        # Create the start icon from the icons image
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(xbtn + 23, ybtn + 9, 51, 51),
+            image_surface=self.icons.subsurface((2, 61, 51, 51)),
+            container=self.menu_panel
+        )
+        # Create the developed by label
+        label_rect = pygame.Rect((self._WIDTH-400)/2, self._HEIGHT-45, 400, 20)
+        pygame_gui.elements.UILabel(
+            relative_rect=label_rect, object_id="#developed_lbl",
+            text="Developed by:  Fidel Jesus O. Surtida I",
+            container=self.menu_panel
         )
 
     def _initialize_gameover_elements(self):
         """
         Creates the GUI for the GAMEOVER state of the game.
         """
-        wtitle, htitle = self._WIDTH - 320, 120
-        bwidth, bheight = 210, 65
-        xtitle, ytitle = (self._WIDTH-wtitle) / 2, (self._HEIGHT-htitle) / 2-80
-        xbtn, ybtn = (self._WIDTH - bwidth) / 2, ytitle + htitle + 40
+        wtitle, htitle = self._WIDTH - 370, 120
+        bwidth, bheight = 230, 70
+        picwidth, picheight = 300, 200
+        xtitle = (self._WIDTH - wtitle) / 2
+        ytitle = (self._HEIGHT - htitle) / 2 - 150
 
         # Create a black transparent gameover panel
         self.gameover_panel = pygame_gui.elements.UIPanel(
@@ -83,16 +97,61 @@ class Interface:
         )
         self.gameover_panel.hide()
         # Create the game over title label
-        pygame_gui.elements.UILabel(
+        gameover_lbl = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect(xtitle, ytitle, wtitle, htitle),
             text="GAME OVER", container=self.gameover_panel,
             object_id="#gameover_lbl"
         )
         # Create the restart button
+        top_left = gameover_lbl.rect.bottomright + pygame.Vector2(-bwidth-30,40)
         self.restart_btn = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect(xbtn, ybtn, bwidth, bheight),
-            text="RESTART", container=self.gameover_panel,
+            relative_rect=pygame.Rect(*top_left, bwidth, bheight),
+            text="    RETRY", container=self.gameover_panel,
             object_id="#restart_btn"
+        )
+        # Create the restart icon from the icons image
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(*top_left + (25, 8), 50, 50),
+            image_surface=self.icons.subsurface((55, 61, 50, 50)),
+            container=self.gameover_panel
+        )
+        # Create the quit button
+        top_left = self.restart_btn.rect.bottomleft + pygame.Vector2(0, 30)
+        self.quit_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect(*top_left, bwidth, bheight),
+            text="  QUIT", container=self.gameover_panel,
+            object_id="#quit_btn"
+        )
+        # Create the quit icon from the icons image
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(*top_left + (28, 8), 50, 50),
+            image_surface=self.icons.subsurface((107, 61, 50, 50)),
+            container=self.gameover_panel
+        )
+        # Create the last moments panel
+        top_left = gameover_lbl.rect.bottomleft + pygame.Vector2(40, 25)
+        moments_panel = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(*top_left, picwidth, picheight),
+            starting_height=10, manager=self.manager,
+            object_id="#last_moments_panel", container=self.gameover_panel
+        )
+        # Create the image holder for the last moments
+        self.moments_image = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(0, 0, picwidth, picheight),
+            image_surface=pygame.Surface((picwidth, picheight)),
+            container=moments_panel
+        )
+        # Create the deathcam label
+        pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(0, 0, 120, 25),
+            text="DEATHCAM  ", container=moments_panel,
+            object_id="#deathcam_lbl"
+        )
+        # Create the deathcam icon from the icons image
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(5, 3, 20, 18),
+            image_surface=self.icons.subsurface((131, 4, 20, 18)),
+            container=moments_panel
         )
 
     def _initialize_play_elements(self):
@@ -218,3 +277,8 @@ class Interface:
     def update_stretch(self, stretch):
         """ Updates the stretch label with current length of the snake. """
         self._stretch_lbl.set_text(f"STRETCH: {stretch}m")
+
+    def update_moments_image(self, image):
+        """ Updates the last moments image with the given image. """
+        self.moments_image.set_image(image)
+        self.moments_image.rebuild()
