@@ -333,8 +333,9 @@ class SnakePart(Sprite):
         """ Rotates the sprite image based on the direction."""
         if self.image:
             index = direction or self._movement
-            directions = [Snake.DOWN, Snake.UP, Snake.LEFT, Snake.RIGHT]
-            degrees = [0, 180, -90, 90][directions.index(index)]
+            directions = [Snake.ZERO, Snake.DOWN, Snake.UP,
+                          Snake.LEFT, Snake.RIGHT]
+            degrees = [0, 0, 180, -90, 90][directions.index(index)]
             self.image = pygame.transform.rotate(self._img, degrees)
 
 

@@ -110,6 +110,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added Icons to Buttons in Main Menu and Game Over Screen.
 - April 23, 2024
   - Added Results Panel in the Game Over Screen with new font and icons.
+  - Implemented Quit Button to go back to main menu screen and reset values.
 
 <br>
 <b>This project is currently under development.</b>

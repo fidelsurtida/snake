@@ -48,6 +48,18 @@ class Game:
         self.score = 0
         self.total_time = 0
 
+    def reset_game(self):
+        """
+        This will be called in events to reset the game state to new game.
+        All variables that needs to return to initial value should be put here.
+        """
+        self.snake = Snake(background=self.bg)
+        self._gameover_counter = 0.12
+        self._auto_path_counter = 0
+        self._uturn = False
+        self.score = 0
+        self.total_time = 0
+
     def update(self, time_delta):
         """
         Handles the game logic. Updates the game objects and status.
@@ -119,12 +131,14 @@ class Game:
                 elif event.ui_element == self.interface.restart_btn:
                     self.state = GAMESTATE.PLAY
                     self.interface.restart_game_event()
-                    # Reset the game objects
-                    self.snake = Snake(background=self.bg)
+                    self.reset_game()
+                    # Reset the food object
                     self.apple = Food(filename="apple.png", points=10, regen=2)
-                    self._gameover_counter = 0.12
-                    self.score = 0
-                    self.total_time = 0
+                # QUIT BUTTON EVENT
+                elif event.ui_element == self.interface.quit_btn:
+                    self.state = GAMESTATE.MENU
+                    self.interface.main_menu_event()
+                    self.reset_game()
 
             # SPAWN FOOD EVENT
             if self.state == GAMESTATE.PLAY:

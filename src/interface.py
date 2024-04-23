@@ -314,6 +314,16 @@ class Interface:
                         self._floaters.remove(floater)
                         break
 
+    def main_menu_event(self):
+        """ Sets the gamestate and shows the menu panel. """
+        self.state = GAMESTATE.MENU
+        self.menu_panel.show()
+        self.game_panel.hide()
+        self.gameover_panel.hide()
+        self.update_score(0)
+        self.update_lifetime(100)
+        self.update_stretch(0)
+
     def start_game_event(self):
         """ Sets the gamestate and hides the menu panel. """
         self.state = GAMESTATE.PLAY
