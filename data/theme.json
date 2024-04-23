@@ -3,7 +3,7 @@
    {
       "colours":
       {
-         "normal_text": "black"
+         "normal_text": "white"
       },
       "font":
       {
@@ -64,6 +64,20 @@
          {
             "package": "assets.fonts",
             "resource": "DoctorGlitch.otf"
+         }
+      }
+   },
+
+   "#mont_font":
+   {
+      "font":
+      {
+         "name": "MontHeavy",
+         "size": "20",
+         "regular_resource":
+         {
+            "package": "assets.fonts",
+            "resource": "MontHeavy.otf"
          }
       }
    },
@@ -210,6 +224,7 @@
       "prototype": "#designer_font",
       "colours":
       {
+         "normal_text": "#222",
          "text_shadow": "#ddd"
       },
       "misc":
@@ -224,6 +239,7 @@
       "prototype": "#designer_font",
       "colours":
       {
+         "normal_text": "#222",
          "text_shadow": "#ddd"
       },
       "font":
@@ -252,6 +268,76 @@
       "misc":
       {
          "text_horiz_alignment": "right"
+      }
+   },
+
+   "#player_lbl":
+   {
+      "prototype": "#mont_font",
+      "colours":
+      {
+         "dark_bg": "#36404D"
+      },
+      "font":
+      {
+         "size": "17"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "center"
+      }
+   },
+
+   "#results_player_lbl":
+   {
+      "prototype": "#player_lbl",
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 0)"
+      }
+   },
+
+   "#results_stretch_lbl":
+   {
+      "prototype": "#mont_font",
+      "font":
+      {
+         "size": "16"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "left"
+      }
+   },
+
+   "#results_lifetime_lbl":
+   {
+      "prototype": "#results_stretch_lbl"
+   },
+
+   "#total_score_lbl":
+   {
+      "prototype": "#mont_font",
+      "colours":
+      {
+         "dark_bg": "#36404D"
+      },
+      "font":
+      {
+         "size": "17"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "center"
+      }
+   },
+
+   "#results_score_lbl":
+   {
+      "prototype": "#total_score_lbl",
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 0)"
       }
    },
 
@@ -298,6 +384,20 @@
          "shape": "rounded_rectangle",
          "shape_corner_radius": "15",
          "border_width": "10"
+      }
+   },
+
+   "#results_panel":
+   {
+      "prototype": "#last_moments_panel",
+      "colours":
+      {
+         "normal_border": "#36404D"
+      },
+      "misc":
+      {
+         "shape_corner_radius": "7",
+         "border_width": "4"
       }
    }
 }

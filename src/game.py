@@ -44,8 +44,9 @@ class Game:
         self.snake = Snake(background=self.bg)
         # Create a starting Food Object (call this after play button event)
         self.apple = None
-        # Score of the current game
+        # Score and total time of the current game
         self.score = 0
+        self.total_time = 0
 
     def update(self, time_delta):
         """
@@ -61,6 +62,7 @@ class Game:
         elif self.state == GAMESTATE.PLAY:
             # Reduce the life of the player based on the passed time
             self.snake.lifetime -= time_delta
+            self.total_time += time_delta
             self.interface.update_lifetime(max(0, self.snake.lifetime))
 
             # Update the snake if it collides with the food and eats it
@@ -122,6 +124,7 @@ class Game:
                     self.apple = Food(filename="apple.png", points=10, regen=2)
                     self._gameover_counter = 0.12
                     self.score = 0
+                    self.total_time = 0
 
             # SPAWN FOOD EVENT
             if self.state == GAMESTATE.PLAY:
@@ -228,13 +231,20 @@ class Game:
 
         # If the gameover counter reaches zero, then set state to GAMEOVER
         # We also need to compute the death moment location of the snake
+        # And finally pass the final game data to the results panel
         if self._gameover_counter <= 0:
             self.state = GAMESTATE.GAMEOVER
             self.interface.gameover_event()
+
             # Set the moments image of the snake in the gameover screen
-            width, height, (x, y) = 300, 200, self.snake.head.bounds.topleft
+            width, height, (x, y) = 340, 200, self.snake.head.bounds.topleft
             snakepos = (x - (width // 3) - 20, y - (height // 3))
             moments_rect = pygame.Rect(*snakepos, width, height)
             moments_rect = moments_rect.clamp(self.screen.get_rect())
             moments = self.screen.subsurface(moments_rect)
             self.interface.update_moments_image(moments)
+
+            # Pass the final game data to the results panel
+            self.interface.update_results_data(score=self.score,
+                                               stretch=self.snake.stretch,
+                                               lifetime=self.total_time)

@@ -85,9 +85,11 @@ class Interface:
         """
         wtitle, htitle = self._WIDTH - 370, 120
         bwidth, bheight = 230, 70
-        picwidth, picheight = 300, 200
+        picwidth, picheight = 340, 200
+        res_width, res_height = wtitle - 50, 80
+        res_col = res_width / 3
         xtitle = (self._WIDTH - wtitle) / 2
-        ytitle = (self._HEIGHT - htitle) / 2 - 150
+        ytitle = (self._HEIGHT - htitle) / 4
 
         # Create a black transparent gameover panel
         self.gameover_panel = pygame_gui.elements.UIPanel(
@@ -102,8 +104,81 @@ class Interface:
             text="GAME OVER", container=self.gameover_panel,
             object_id="#gameover_lbl"
         )
+        # Create a results panel
+        top_left = (gameover_lbl.rect.bottomleft +
+                    pygame.Vector2(25, 15))
+        self.results_panel = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(*top_left, res_width, res_height),
+            starting_height=10, manager=self.manager,
+            object_id="#results_panel", container=self.gameover_panel
+        )
+        # Create the player label
+        player_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(0, 0, res_col, 38),
+            container=self.results_panel, object_id="#player_lbl",
+            text="     PLAYER NAME"
+        )
+        # Create the player icon beside the label
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(15, 3, 30, 31),
+            image_surface=self.icons.subsurface((125, 25, 30, 32)),
+            container=self.results_panel
+        )
+        # Create the player name label (real player name goes here)
+        top_left = player_lbl.relative_rect.bottomleft
+        self._results_player_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(*top_left, res_col, 30),
+            container=self.results_panel, object_id="#results_player_lbl",
+            text="DivineKaiser"
+        )
+        # Create the stretch icon beside the label
+        stretch_icon = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(res_col + 15, 3, 27, 27),
+            image_surface=self.icons.subsurface((65, 0, 55, 55)),
+            container=self.results_panel
+        )
+        # Create the stretch label
+        self._results_stretch_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(res_col + 50, 0, res_col - 40, 35),
+            container=self.results_panel, object_id="#results_stretch_lbl",
+            text="STRETCH: 0m"
+        )
+        # Create the lifetime icon beside the label
+        top_left = stretch_icon.relative_rect.bottomleft + pygame.Vector2(0, 2)
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(*top_left, 26, 31),
+            image_surface=self.icons.subsurface((159, 31, 26, 31)),
+            container=self.results_panel
+        )
+        # Create the lifetime label
+        top_left = self._results_stretch_lbl.relative_rect.bottomleft
+        self._results_lifetime_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(*top_left, res_col - 30, 30),
+            container=self.results_panel, object_id="#results_lifetime_lbl",
+            text="LIFETIME: 0s"
+        )
+        # Create the total score label
+        total_score = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(res_col * 2, 0, res_col, 38),
+            container=self.results_panel, object_id="#total_score_lbl",
+            text="     TOTAL SCORE"
+        )
+        # Create the total score icon beside the label
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(res_col * 2 + 15, 6, 30, 28),
+            image_surface=self.icons.subsurface((157, 1, 30, 28)),
+            container=self.results_panel
+        )
+        # Create the results total score label (real score goes here)
+        top_left = total_score.relative_rect.bottomleft
+        self._results_score_lbl = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(*top_left, res_col, 30),
+            container=self.results_panel, object_id="#results_score_lbl",
+            text="0"
+        )
         # Create the restart button
-        top_left = gameover_lbl.rect.bottomright + pygame.Vector2(-bwidth-30,40)
+        top_left = (self.results_panel.rect.bottomright +
+                    pygame.Vector2(-bwidth, 35))
         self.restart_btn = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(*top_left, bwidth, bheight),
             text="    RETRY", container=self.gameover_panel,
@@ -129,7 +204,7 @@ class Interface:
             container=self.gameover_panel
         )
         # Create the last moments panel
-        top_left = gameover_lbl.rect.bottomleft + pygame.Vector2(40, 25)
+        top_left = self.results_panel.rect.bottomleft + pygame.Vector2(0, 18)
         moments_panel = pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect(*top_left, picwidth, picheight),
             starting_height=10, manager=self.manager,
@@ -277,6 +352,14 @@ class Interface:
     def update_stretch(self, stretch):
         """ Updates the stretch label with current length of the snake. """
         self._stretch_lbl.set_text(f"STRETCH: {stretch}m")
+
+    def update_results_data(self, *, player="DivineKaiser", score="0",
+                            stretch="0", lifetime="0"):
+        """ Updates the results panel with the final game data. """
+        self._results_player_lbl.set_text(player)
+        self._results_stretch_lbl.set_text(f"STRETCH:  {stretch}m")
+        self._results_lifetime_lbl.set_text(f"LIFETIME:  {lifetime:.0f}s")
+        self._results_score_lbl.set_text(f"{score}")
 
     def update_moments_image(self, image):
         """ Updates the last moments image with the given image. """

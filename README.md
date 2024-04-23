@@ -108,6 +108,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 22, 2024
   - Added DeathCam and Quit Button in the Game Over Screen.
   - Added Icons to Buttons in Main Menu and Game Over Screen.
+- April 23, 2024
+  - Added Results Panel in the Game Over Screen with new font and icons.
 
 <br>
 <b>This project is currently under development.</b>
