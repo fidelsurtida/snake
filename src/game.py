@@ -247,8 +247,13 @@ class Game:
         # We also need to compute the death moment location of the snake
         # And finally pass the final game data to the results panel
         if self._gameover_counter <= 0:
+            # Set the game state to GAMEOVER
             self.state = GAMESTATE.GAMEOVER
             self.interface.gameover_event()
+
+            # Set the dead image sprite of the snake head
+            self.snake.die()
+            self.snake.draw(self.screen)
 
             # Set the moments image of the snake in the gameover screen
             width, height, (x, y) = 340, 200, self.snake.head.bounds.topleft

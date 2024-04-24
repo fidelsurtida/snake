@@ -53,6 +53,7 @@ class Snake:
         self.tails = []
         self.covers = []
         self.lifetime = Snake.LIFETIME
+        self.dead = False
         for i in range(1, 5):
             # Seperate the tail sprite into the last element
             sprite = self._bodyimg if i < 4 else self._tailimg
@@ -72,6 +73,7 @@ class Snake:
             snake_sheet.subsurface((1, 45, 40, 40)),
             snake_sheet.subsurface((1, 85, 40, 40))
         ]
+        self._dead_headimg = snake_sheet.subsurface((1, 122, 40, 40))
         self._bodyimg = snake_sheet.subsurface((85, 85, 40, 40))
         self._tailimg = snake_sheet.subsurface((43, 85, 40, 40))
         # Get the 4 different turn parts image
@@ -148,7 +150,7 @@ class Snake:
 
         # Updates the head sprite animation index
         self._time_frame += time_delta
-        if self._time_frame > 0.08:
+        if not self.dead and self._time_frame > 0.08:
             self._head_index = (self._head_index + 1) % 3
             self.head.change_sprite(self._headimg[self._head_index])
             self._time_frame = 0
@@ -219,6 +221,11 @@ class Snake:
         # And update the new tail to its new sprite tail image
         self.body[-1].change_sprite(self._bodyimg)
         last.change_sprite(self._tailimg, self.body[-1].direction)
+
+    def die(self):
+        """ Changes the sprite of the head of snake to dead sprite. """
+        self.dead = True
+        self.head.change_sprite(self._dead_headimg, self.direction)
 
     @property
     def parts(self):
