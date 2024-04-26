@@ -15,6 +15,7 @@ from src.config import Config
 from src.config import GAMESTATE
 from src.objects.snake import Snake
 from src.objects.food import Food
+from src.objects.foodbuff import FoodBuff
 
 
 class Game:
@@ -44,6 +45,7 @@ class Game:
         self.snake = Snake(background=self.bg)
         # Create a starting Food Object (call this after play button event)
         self.apple = None
+        self.golden_apple = None
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
@@ -78,7 +80,8 @@ class Game:
             self.interface.update_lifetime(max(0, self.snake.lifetime))
 
             # Update the snake if it collides with the food and eats it
-            self.snake_eat_food_update()
+            self.snake_eat_food_update(self.apple)
+            self.snake_eat_food_update(self.golden_apple)
             # Check if the snake head collides with its body parts
             self.snake_collide_self_checker(time_delta)
 
@@ -98,6 +101,11 @@ class Game:
         Returns False for it to signal the game loop to stop.
         Custom events of some game objects are also handled here.
         """
+        def instantiate_foods():
+            self.apple = Food(filename="apple.png", points=10, regen=2)
+            self.golden_apple = FoodBuff(filename="goldapple.png",
+                                         points=50, regen=5)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -125,15 +133,15 @@ class Game:
                 if event.ui_element == self.interface.start_btn:
                     self.state = GAMESTATE.PLAY
                     self.interface.start_game_event()
-                    # Instatiate the apple food
-                    self.apple = Food(filename="apple.png", points=10, regen=2)
+                    # Instatiate the apple food and golden apple
+                    instantiate_foods()
                 # RESTART BUTTON EVENT
                 elif event.ui_element == self.interface.restart_btn:
                     self.state = GAMESTATE.PLAY
                     self.interface.restart_game_event()
                     self.reset_game()
-                    # Reset the food object
-                    self.apple = Food(filename="apple.png", points=10, regen=2)
+                    # Reset the food objects
+                    instantiate_foods()
                 # QUIT BUTTON EVENT
                 elif event.ui_element == self.interface.quit_btn:
                     self.state = GAMESTATE.MENU
@@ -144,6 +152,8 @@ class Game:
             if self.state == GAMESTATE.PLAY:
                 if event.type == Food.SPAWN_FOOD_EVENT:
                     self.apple.spawn(off_limits=self.snake.parts)
+                if event.type == FoodBuff.SPAWN_FOOD_BUFF_EVENT:
+                    self.golden_apple.spawn(off_limits=self.snake.parts)
 
         return True
 
@@ -159,6 +169,7 @@ class Game:
         # Draw game objects that are only viewable in PLAY mode
         if self.state == GAMESTATE.PLAY:
             self.apple.draw(self.screen)
+            self.golden_apple.draw(self.screen)
 
         # Draw the GUI elements from Inteface
         self.interface.draw()
@@ -212,25 +223,25 @@ class Game:
                 y = ((bounds.y - Snake.SIZE) % self.HEIGHT)
                 part.teleport(x, y)
 
-    def snake_eat_food_update(self):
+    def snake_eat_food_update(self, food):
         """
         Checks if the snake head collides with the current food.
         If it collides then destroy the food and grow the snake.
         """
-        if self.apple.spawned:
-            if self.snake.head.bounds.colliderect(self.apple.bounds):
+        if food.spawned:
+            if self.snake.head.bounds.colliderect(food.bounds):
                 # Spawn a regen label
-                apple_pos = pygame.Vector2(self.apple.bounds.topleft)
-                self.interface.spawn_regen_label(apple_pos, self.apple.regen)
+                apple_pos = pygame.Vector2(food.bounds.topleft)
+                self.interface.spawn_regen_label(apple_pos, food.regen)
                 # Update the score add the health regen
-                self.score += self.apple.points
-                self.snake.lifetime += self.apple.regen
+                self.score += food.points
+                self.snake.lifetime += food.regen
                 # Update the game labels
                 self.interface.update_score(self.score)
                 self.interface.update_stretch(self.snake.stretch)
                 # Destroy the apple and grow the snake
                 self.snake.grow()
-                self.apple.destroy()
+                food.destroy()
 
     def snake_collide_self_checker(self, time_delta):
         """

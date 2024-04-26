@@ -36,6 +36,7 @@ class Food(Sprite):
         self.image = pygame.image.load(Config.assets_path(filename))
         self.image = pygame.transform.scale(self.image, (self.SIZE, self.SIZE))
         self.spawned = False
+        self.spawn_event = self.SPAWN_FOOD_EVENT
         self.points = points
         self.regen = regen
         self._swidth = Config.SCREEN_WIDTH
@@ -68,7 +69,7 @@ class Food(Sprite):
         # Initialize the final valid position in this food object
         self.rect = rect
         self.spawned = True
-        pygame.time.set_timer(self.SPAWN_FOOD_EVENT, 0)
+        pygame.time.set_timer(self.spawn_event, 0)
 
     def destroy(self):
         """

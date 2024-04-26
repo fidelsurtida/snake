@@ -113,6 +113,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Implemented Quit Button to go back to main menu screen and reset values.
 - April 24, 2024
   - Added a snake dead sprite on the head part.
+- April 26, 2024
+  - Added FoodBuff class that spawns golden apple with random delayed timer.
 
 <br>
 <b>This project is currently under development.</b>
