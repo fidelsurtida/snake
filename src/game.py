@@ -85,6 +85,9 @@ class Game:
             # Check if the snake head collides with its body parts
             self.snake_collide_self_checker(time_delta)
 
+            # Update the food objects for its animation states
+            self.golden_apple.update(time_delta)
+
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
             # Update the movement of the snake

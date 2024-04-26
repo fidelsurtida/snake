@@ -115,6 +115,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added a snake dead sprite on the head part.
 - April 26, 2024
   - Added FoodBuff class that spawns golden apple with random delayed timer.
+  - Implemented Particle System and Particle Classes to emulate particle effects.
+  - Added a sparkle particle system in the food buff class.
 
 <br>
 <b>This project is currently under development.</b>

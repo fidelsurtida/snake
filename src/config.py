@@ -36,8 +36,8 @@ class Config:
     # FOOD CONSTANTS
     FOOD_SIZE = 40
     FOOD_SPAWN_DELAY = 1000
-    FOOD_BUFF_MIN_DELAY = 1000
-    FOOD_BUFF_MAX_DELAY = 3000
+    FOOD_BUFF_MIN_DELAY = 2000
+    FOOD_BUFF_MAX_DELAY = 5000
 
     # BASE PATH
     BASE_PATH = Path(__file__).resolve().parent.parent
