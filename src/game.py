@@ -235,7 +235,8 @@ class Game:
             if self.snake.head.bounds.colliderect(food.bounds):
                 # Spawn a regen label
                 apple_pos = pygame.Vector2(food.bounds.topleft)
-                self.interface.spawn_regen_label(apple_pos, food.regen)
+                self.interface.spawn_regen_label(apple_pos, food.regen,
+                                                 food.points)
                 # Update the score add the health regen
                 self.score += food.points
                 self.snake.lifetime += food.regen

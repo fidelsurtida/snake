@@ -87,5 +87,9 @@ class Food(Sprite):
 
     @property
     def bounds(self):
-        """ Returns the Rect object of the Food. """
-        return self.rect.copy()
+        """ Returns the reduced Rect object of the Food. """
+        rect = self.rect.copy()
+        adjustment = self.SIZE // 4
+        rect.topleft = (rect.x + adjustment, rect.y + adjustment)
+        rect.size = (rect.width - adjustment * 2, rect.height - adjustment * 2)
+        return rect

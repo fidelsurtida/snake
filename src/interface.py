@@ -164,10 +164,10 @@ class Interface:
             text="     TOTAL SCORE"
         )
         # Create the total score icon beside the label
+        self.score_icon = self.icons.subsurface((157, 1, 30, 28))
         pygame_gui.elements.UIImage(
             relative_rect=pygame.Rect(res_col * 2 + 15, 6, 30, 28),
-            image_surface=self.icons.subsurface((157, 1, 30, 28)),
-            container=self.results_panel
+            image_surface=self.score_icon, container=self.results_panel
         )
         # Create the results total score label (real score goes here)
         top_left = total_score.relative_rect.bottomleft
@@ -344,12 +344,16 @@ class Interface:
         self.state = GAMESTATE.GAMEOVER
         self.gameover_panel.show()
 
-    def spawn_regen_label(self, position, regen):
+    def spawn_regen_label(self, position, regen, points):
         """ Spawns a label that shows the regen stat after eating food. """
-        floater = Floater(name="regen", position=position,
-                          dimension=(45, 40), text=f"+{regen}",
-                          icon=self.heart_icon, isize=30)
+        floater = Floater(name="regen", position=position - (35, 0),
+                          dimension=(35, 30), text=f"+{regen}",
+                          icon=self.heart_icon, isize=25)
+        point_floater = Floater(name="points", position=position + (30, 0),
+                                dimension=(40, 30), text=f"{points}",
+                                icon=self.score_icon, isize=25)
         self._floaters.append(floater)
+        self._floaters.append(point_floater)
 
     def update_score(self, score):
         """ Updates the score label with current score of the game. """

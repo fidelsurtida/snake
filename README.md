@@ -119,6 +119,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added a sparkle particle system in the food buff class.
 - April 27, 2024
   - Implemented lifetime of food buff to dissapear after a certain time.
+  - Added Score points floater after eating any kind of food.
 
 <br>
 <b>This project is currently under development.</b>

@@ -194,9 +194,23 @@
          "normal_text": "#47FF49",
          "text_shadow": "#038e05"
       },
+      "font":
+      {
+         "size": "15"
+      },
       "misc":
       {
          "text_shadow_size": "2"
+      }
+   },
+
+   "@points_lbl":
+   {
+      "prototype": "@regen_lbl",
+      "colours":
+      {
+         "normal_text": "#ddd",
+         "text_shadow": "#444"
       }
    },
 
