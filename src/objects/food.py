@@ -48,21 +48,21 @@ class Food(Sprite):
         """ Triggers the timer for the Food to spawn. """
         pygame.time.set_timer(self.SPAWN_FOOD_EVENT, self.SPAWN_DELAY)
 
-    def spawn(self, *, off_limits):
+    def spawn(self, *, off_limits_rects):
         """
         Sets the Food at a random position based on screen bounds.
         Spawn it not too close on the window borders and also there will
         be a GUI panel at the top with 50 height.
         We also need to check if the random position is not occupied by
-        any of the snake parts.
+        any of the passed rectangle off limits.
         """
         # Loop until a valid position is generated
         while True:
             x = random.randint(self.SIZE, self._swidth - self.SIZE * 2)
             y = random.randint(self.SIZE + 50, self._sheight - self.SIZE * 2)
             rect = pygame.Rect(x, y, self.SIZE, self.SIZE)
-            for part in off_limits:
-                if part.bounds.colliderect(rect):
+            for off_limit in off_limits_rects:
+                if off_limit and off_limit.colliderect(rect):
                     break
             else:
                 break
@@ -93,3 +93,13 @@ class Food(Sprite):
         rect.topleft = (rect.x + adjustment, rect.y + adjustment)
         rect.size = (rect.width - adjustment * 2, rect.height - adjustment * 2)
         return rect
+
+    @property
+    def territory(self):
+        """ Returns the expanded rect area of the food for off limits area. """
+        if self.rect:
+            rect = self.rect.copy()
+            rect.topleft = (rect.x - self.SIZE, rect.y - self.SIZE)
+            rect.size = (rect.width + self.SIZE * 2,
+                         rect.height + self.SIZE * 2)
+            return rect

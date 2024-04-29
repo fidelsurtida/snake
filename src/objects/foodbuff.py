@@ -41,12 +41,12 @@ class FoodBuff(Food):
                                Config.FOOD_BUFF_MAX_DELAY)
         pygame.time.set_timer(self.SPAWN_FOOD_BUFF_EVENT, delay)
 
-    def spawn(self, *, off_limits):
+    def spawn(self, *, off_limits_rects):
         """
         Draw first the food buff image by calling the super class method.
         Then spawn the particle effect of the food buff.
         """
-        super().spawn(off_limits=off_limits)
+        super().spawn(off_limits_rects=off_limits_rects)
         self.particles.spawn(self.rect)
         self.lifetime = Config.FOOD_BUFF_LIFETIME
         self.image.set_alpha(255)

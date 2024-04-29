@@ -233,6 +233,11 @@ class Snake:
         return [self.head] + self.body
 
     @property
+    def rects(self):
+        """ Returns all the snake part rects including the head. """
+        return [part.bounds for part in self.parts]
+
+    @property
     def stretch(self):
         """ Gets the total stretch of the snake excluding the initial parts. """
         return len(self.body) - 3

@@ -120,6 +120,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 27, 2024
   - Implemented lifetime of food buff to dissapear after a certain time.
   - Added Score points floater after eating any kind of food.
+- April 29, 2024
+  - Fixed spawn of food and food buff to prevent very close area spawns to each other.
 
 <br>
 <b>This project is currently under development.</b>

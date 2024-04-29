@@ -154,9 +154,13 @@ class Game:
             # SPAWN FOOD EVENT
             if self.state == GAMESTATE.PLAY:
                 if event.type == Food.SPAWN_FOOD_EVENT:
-                    self.apple.spawn(off_limits=self.snake.parts)
+                    # add the snake part rects and golden apple off limit area
+                    limits = self.snake.rects + [self.golden_apple.territory]
+                    self.apple.spawn(off_limits_rects=limits)
                 if event.type == FoodBuff.SPAWN_FOOD_BUFF_EVENT:
-                    self.golden_apple.spawn(off_limits=self.snake.parts)
+                    # add the snake part rects and golden apple off limit area
+                    limits = self.snake.rects + [self.apple.territory]
+                    self.golden_apple.spawn(off_limits_rects=limits)
 
         return True
 
