@@ -86,6 +86,7 @@ class Game:
             self.snake_collide_self_checker(time_delta)
 
             # Update the food objects for its animation states
+            self.apple.update(time_delta)
             self.golden_apple.update(time_delta)
 
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES

@@ -2,8 +2,8 @@
 FoodBuff Class - foodbuff.py
 -----------------------------------------------------------
 This module contains the FoodBuff Class that extends the
-Food Class with additional particle sprite. This also
-has a time limit before the Food Buff will disappear.
+Food Class. This also has a time limit before the Food
+Buff will disappear. It also has a different userevent.
 -----------------------------------------------------------
 Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
@@ -29,10 +29,10 @@ class FoodBuff(Food):
         super().__init__(filename=filename, points=points, regen=regen)
         self.spawn_event = self.SPAWN_FOOD_BUFF_EVENT
         self.lifetime = Config.FOOD_BUFF_LIFETIME
-        # Create the Particle System for the Food Buff
-        particle_sheet = pygame.image.load(Config.assets_path("particles.png"))
-        shiny_image = particle_sheet.subsurface(0, 0, 50, 50)
-        self.particles = ParticleSystem(image=shiny_image, size=25,
+
+        # Create the Particle System for the Food
+        shiny_particle = super().PARTICLE_SHEET.subsurface(0, 0, 50, 50)
+        self.particles = ParticleSystem(image=shiny_particle, size=25,
                                         lifetime=1, count=7)
 
     def _trigger_spawn(self):
@@ -44,20 +44,18 @@ class FoodBuff(Food):
     def spawn(self, *, off_limits_rects):
         """
         Draw first the food buff image by calling the super class method.
-        Then spawn the particle effect of the food buff.
+        Reset the lifetime and set the image to visible with full alpha.
         """
         super().spawn(off_limits_rects=off_limits_rects)
-        self.particles.spawn(self.rect)
         self.lifetime = Config.FOOD_BUFF_LIFETIME
         self.image.set_alpha(255)
 
     def update(self, time_delta):
         """
-        Updates the particle animation of the Food Buff.
-        This will also reduce the lifetime of food buff and
+        This will reduce the lifetime of food buff and
         automatically destroys itself when lifetime reaches 0.
         """
-        self.particles.update(time_delta)
+        super().update(time_delta)
         if self.spawned:
             # Update the lifetime of the Food Buff
             self.lifetime = max(0, self.lifetime - time_delta)
@@ -66,16 +64,6 @@ class FoodBuff(Food):
             if self.lifetime <= Config.FOOD_BUFF_LIFETIME / 2:
                 alpha = self.lifetime / (Config.FOOD_BUFF_LIFETIME / 2) * 255
                 self.image.set_alpha(alpha)
-            # Destory the Food Buff if lifetime reaches 0
+            # Destroy the Food Buff if lifetime reaches 0
             if self.lifetime <= 0:
                 self.destroy()
-
-    def draw(self, screen):
-        """ Draws the Food Buff and its particle animation. """
-        super().draw(screen)
-        self.particles.draw(screen)
-
-    def destroy(self):
-        """ Releases the Food Buff and its particle animation. """
-        super().destroy()
-        self.particles.destroy()

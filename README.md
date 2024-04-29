@@ -122,6 +122,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added Score points floater after eating any kind of food.
 - April 29, 2024
   - Fixed spawn of food and food buff to prevent very close area spawns to each other.
+  - Transferred particle system to the main Food class and added health effect on basic apple.
 
 <br>
 <b>This project is currently under development.</b>

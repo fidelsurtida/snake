@@ -14,6 +14,7 @@ import pygame
 import random
 from pygame.sprite import Sprite
 from src.config import Config
+from src.objects.particles import ParticleSystem
 
 
 class Food(Sprite):
@@ -22,8 +23,9 @@ class Food(Sprite):
     SIZE = Config.FOOD_SIZE
     SPAWN_DELAY = Config.FOOD_SPAWN_DELAY
 
-    # Class Event Constant
+    # Class Event and Particle Sheet Constant
     SPAWN_FOOD_EVENT = pygame.USEREVENT + 100
+    PARTICLE_SHEET = None
 
     def __init__(self, *, filename, points, regen):
         """
@@ -41,6 +43,13 @@ class Food(Sprite):
         self.regen = regen
         self._swidth = Config.SCREEN_WIDTH
         self._sheight = Config.SCREEN_HEIGHT
+
+        # Create the Particle System for the Food
+        assets_path = Config.assets_path("particles.png")
+        Food.PARTICLE_SHEET = pygame.image.load(assets_path)
+        health_particle = Food.PARTICLE_SHEET.subsurface(50, 0, 50, 50)
+        self.particles = ParticleSystem(image=health_particle, size=17,
+                                        lifetime=0.7, count=7)
         # Start the timer to spawn this Food Object after instantiation.
         self._trigger_spawn()
 
@@ -69,7 +78,22 @@ class Food(Sprite):
         # Initialize the final valid position in this food object
         self.rect = rect
         self.spawned = True
+        self.particles.spawn(self.rect)
         pygame.time.set_timer(self.spawn_event, 0)
+
+    def update(self, time_delta):
+        """ Updates the particle system of the Food. """
+        self.particles.update(time_delta)
+
+    def draw(self, screen):
+        """
+        Draws the Food to the screen only if spawned.
+        Also draw the particle system whether spawned or not.
+        """
+        if self.spawned:
+            screen.blit(self.image, self.rect)
+        # Draw the particle system
+        self.particles.draw(screen)
 
     def destroy(self):
         """
@@ -79,11 +103,8 @@ class Food(Sprite):
         self.spawned = False
         self.rect = None
         self._trigger_spawn()
-
-    def draw(self, screen):
-        """ Draws the Food to the screen only if spawned. """
-        if self.spawned:
-            screen.blit(self.image, self.rect)
+        # Trigger the destroy method of the particle system
+        self.particles.destroy()
 
     @property
     def bounds(self):
