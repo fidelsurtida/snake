@@ -40,6 +40,12 @@ class Config:
     FOOD_BUFF_MAX_DELAY = 8000
     FOOD_BUFF_LIFETIME = 4
 
+    # POWERUP CONSTANTS
+    SPEEDUP_SIZE = 60
+    SPEEDUP_LIFETIME = 6
+    SPEEDUP_MIN_DELAY = 2000
+    SPEEDUP_MAX_DELAY = 4000
+
     # BASE PATH
     BASE_PATH = Path(__file__).resolve().parent.parent
 

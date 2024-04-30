@@ -16,6 +16,7 @@ from src.config import GAMESTATE
 from src.objects.snake import Snake
 from src.objects.food import Food
 from src.objects.foodbuff import FoodBuff
+from src.objects.speedup import SpeedUp
 
 
 class Game:
@@ -43,9 +44,11 @@ class Game:
         self._uturn = False
         # Create the Snake object as the player and pass the game background
         self.snake = Snake(background=self.bg)
-        # Create a starting Food Object (call this after play button event)
+        # Create a starting Food Object (creation at play button press)
         self.apple = None
         self.golden_apple = None
+        # Create the starting item buffs (creation at play button press)
+        self.speedup = None
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
@@ -89,6 +92,9 @@ class Game:
             self.apple.update(time_delta)
             self.golden_apple.update(time_delta)
 
+            # Update the buff items for animation states
+            self.speedup.update(time_delta)
+
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
             # Update the movement of the snake
@@ -109,6 +115,9 @@ class Game:
             self.apple = Food(filename="apple.png", points=10, regen=2)
             self.golden_apple = FoodBuff(filename="goldapple.png",
                                          points=50, regen=5)
+
+        def instantiate_items():
+            self.speedup = SpeedUp(filename="speedup.png", points=0, speed=5)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -139,6 +148,9 @@ class Game:
                     self.interface.start_game_event()
                     # Instatiate the apple food and golden apple
                     instantiate_foods()
+                    # Instantiate also the buff items
+                    instantiate_items()
+
                 # RESTART BUTTON EVENT
                 elif event.ui_element == self.interface.restart_btn:
                     self.state = GAMESTATE.PLAY
@@ -146,6 +158,9 @@ class Game:
                     self.reset_game()
                     # Reset the food objects
                     instantiate_foods()
+                    # Reset the buff items
+                    instantiate_items()
+
                 # QUIT BUTTON EVENT
                 elif event.ui_element == self.interface.quit_btn:
                     self.state = GAMESTATE.MENU
@@ -163,6 +178,14 @@ class Game:
                     limits = self.snake.rects + [self.apple.territory]
                     self.golden_apple.spawn(off_limits_rects=limits)
 
+            # SPAWN ITEMS EVENT
+            if self.state == GAMESTATE.PLAY:
+                if event.type == SpeedUp.SPAWN_SPEED_UP_EVENT:
+                    # add the snake part rects and all foods for off limit area
+                    limits = (self.snake.rects + [self.apple.territory,
+                              self.golden_apple.territory])
+                    self.speedup.spawn(off_limits_rects=limits)
+
         return True
 
     def draw(self):
@@ -178,6 +201,7 @@ class Game:
         if self.state == GAMESTATE.PLAY:
             self.apple.draw(self.screen)
             self.golden_apple.draw(self.screen)
+            self.speedup.draw(self.screen)
 
         # Draw the GUI elements from Inteface
         self.interface.draw()

@@ -19,6 +19,7 @@ class FoodBuff(Food):
 
     # Class Event Constant
     SPAWN_FOOD_BUFF_EVENT = pygame.USEREVENT + 101
+    LIFETIME_CONSTANT = Config.FOOD_BUFF_LIFETIME
 
     def __init__(self, *, filename, points, regen):
         """
@@ -28,11 +29,11 @@ class FoodBuff(Food):
         """
         super().__init__(filename=filename, points=points, regen=regen)
         self.spawn_event = self.SPAWN_FOOD_BUFF_EVENT
-        self.lifetime = Config.FOOD_BUFF_LIFETIME
+        self.lifetime = self.LIFETIME_CONSTANT
 
         # Create the Particle System for the Food
         shiny_particle = super().PARTICLE_SHEET.subsurface(0, 0, 50, 50)
-        self.particles = ParticleSystem(image=shiny_particle, size=25,
+        self.particles = ParticleSystem(image=shiny_particle, size=28,
                                         lifetime=1, count=7)
 
     def _trigger_spawn(self):
@@ -47,7 +48,7 @@ class FoodBuff(Food):
         Reset the lifetime and set the image to visible with full alpha.
         """
         super().spawn(off_limits_rects=off_limits_rects)
-        self.lifetime = Config.FOOD_BUFF_LIFETIME
+        self.lifetime = self.LIFETIME_CONSTANT
         self.image.set_alpha(255)
 
     def update(self, time_delta):

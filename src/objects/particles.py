@@ -13,11 +13,17 @@ Author: Fidel Jesus O. Surtida I
 """
 import pygame
 import random
+from enum import Enum
 
 
 class Particle:
 
-    def __init__(self, *, image, spawn_rect, size, lifetime):
+    # Class Enumeration for Particle Animation type
+    class TYPE(Enum):
+        DEFAULT = 0
+        FLOATING = 1
+
+    def __init__(self, *, image, spawn_rect, size, lifetime, animation):
         """
         Initializes a single particle object with its image,
         spawn area, max size and max lifetime. This will be used
@@ -27,7 +33,8 @@ class Particle:
         self.rect = None
         self.spawn_area = spawn_rect
         self.lifetime = lifetime
-        self.size = size
+        self.size = random.randint(size // 2, size)
+        self.animation = animation
         # Internal variables for particle animation
         self._position = None
         self._lifetimer = 0
@@ -40,13 +47,17 @@ class Particle:
 
     def _spawn(self):
         """ Spawns the particle with initial values and random location. """
+        # Modify the respawn of y if the animation is floating, make it lower
+        y_mod = self.size*2 if self.animation == Particle.TYPE.FLOATING else 0
         x = random.randint(self.spawn_area.left, self.spawn_area.right)
-        y = random.randint(self.spawn_area.top, self.spawn_area.bottom)
+        y = random.randint(self.spawn_area.top + y_mod, self.spawn_area.bottom)
+
         self._position = pygame.Vector2(x, y)
         self.rect = pygame.Rect(x, y, 1, 1)
         self._scaledimg = pygame.transform.scale(self.image, (1, 1))
+        self._scaledimg.set_alpha(255)
         self._lifetimer = 0
-        self._delay = random.random() * 1.5
+        self._delay = random.random() * 1.2
 
     def update(self, time_delta):
         """
@@ -66,18 +77,38 @@ class Particle:
         else:
             self._spawn() if not self._stopping else self._stop()
 
-        # Increase the size first in the first half of its lifetime
+        # Variable stats
         halftime, size = self.lifetime / 2, 0
-        if self._lifetimer < self.lifetime / 2:
+        alpha, y_modifier = 255, 0
+
+        # Increase the size first in the first half of its lifetime
+        if self._lifetimer < halftime:
+            alpha = 220
             size = int(self.size * (self._lifetimer / halftime))
-        elif self._lifetimer >= self.lifetime / 2:
-            size = int(self.size * (self._lifetimer / self.lifetime))
-            size = self.size - size
+
+        # Change the y modifier to go up if the animation is floating
+        if self.animation == Particle.TYPE.FLOATING:
+            y_modifier = int(self.size * 2 * (self._lifetimer / self.lifetime))
+
+        # Change the animation on the second half of lifetime based on type
+        if self._lifetimer >= halftime:
+            # Decrease the size if the animation type is default
+            if self.animation == Particle.TYPE.DEFAULT:
+                size = int(self.size * (self._lifetimer / self.lifetime))
+                size = self.size - size
+            # Else if its floating, update the alpha to invisible
+            elif self.animation == Particle.TYPE.FLOATING:
+                size = self.size
+                time_modifier = (self._lifetimer - halftime) / halftime
+                alpha = 160 - int(160 * time_modifier)
 
         # Update the rect and resize the image based on determined size
         self.rect = pygame.Rect(self._position.x - size // 2,
-                                self._position.y - size // 2, size, size)
-        self._scaledimg = pygame.transform.scale(self.image, self.rect.size)
+                                (self._position.y - size // 2) - y_modifier,
+                                size, size)
+        self._scaledimg = pygame.transform.scale(self.image,
+                                                 self.rect.size)
+        self._scaledimg.set_alpha(alpha)
 
     def draw(self, screen):
         """ Draws this particle if lifetime is greater than 0. """
@@ -96,12 +127,14 @@ class Particle:
 
 class ParticleSystem:
 
-    def __init__(self, *, image, size, lifetime, count):
+    def __init__(self, *, image, size, lifetime, count,
+                 animation=Particle.TYPE.DEFAULT):
         """
         Creates a list of Particle objects and initializes them
         based on the given parameters.
         """
         self.particles = None
+        self._animation = animation
         self._image = image
         self._size = size
         self._lifetime = lifetime
@@ -110,7 +143,8 @@ class ParticleSystem:
     def spawn(self, area):
         """ Initializes the particles based on the count. """
         self.particles = [Particle(image=self._image, spawn_rect=area,
-                                   size=self._size, lifetime=self._lifetime)
+                                   size=self._size, lifetime=self._lifetime,
+                                   animation=self._animation)
                           for _ in range(self._count)]
 
     def update(self, time_delta):

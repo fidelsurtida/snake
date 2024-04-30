@@ -48,8 +48,8 @@ class Food(Sprite):
         assets_path = Config.assets_path("particles.png")
         Food.PARTICLE_SHEET = pygame.image.load(assets_path)
         health_particle = Food.PARTICLE_SHEET.subsurface(50, 0, 50, 50)
-        self.particles = ParticleSystem(image=health_particle, size=17,
-                                        lifetime=0.7, count=7)
+        self.particles = ParticleSystem(image=health_particle, size=18,
+                                        lifetime=0.8, count=7)
         # Start the timer to spawn this Food Object after instantiation.
         self._trigger_spawn()
 

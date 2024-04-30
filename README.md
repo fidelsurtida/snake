@@ -39,7 +39,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgements
 
 - Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
-- Button Icons downloaded from [Freepik](https://www.freepik.com/)
+- Button Icons and Particles downloaded from [Freepik](https://www.freepik.com/)
 
 ## Support
 
@@ -123,6 +123,9 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 29, 2024
   - Fixed spawn of food and food buff to prevent very close area spawns to each other.
   - Transferred particle system to the main Food class and added health effect on basic apple.
+- April 30, 2024
+  - Implementation of SpeedUp Class that spawns a speedup item with arrow up effects.
+  - Updated particles effect to include a floating type of animation.
 
 <br>
 <b>This project is currently under development.</b>
