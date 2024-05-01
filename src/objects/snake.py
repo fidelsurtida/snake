@@ -10,6 +10,7 @@ Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
 """
 import pygame
+import pygame_gui
 import copy
 from pygame.sprite import Sprite
 from src.config import Config
@@ -21,6 +22,7 @@ class Snake:
     SPEED = Config.SNAKE_SPEED
     SIZE = Config.SNAKE_SIZE
     LIFETIME = Config.SNAKE_LIFETIME
+    BUFF_DURATION = Config.BUFF_DURATION
 
     # Movement Class Constants
     ZERO = pygame.Vector2(0, 0)
@@ -54,6 +56,10 @@ class Snake:
         self.covers = []
         self.lifetime = Snake.LIFETIME
         self.dead = False
+        self.buff_icon = None
+        self._buff_duration = 0
+        self._buff_counter = None
+        self._buff_rect = None
         for i in range(1, 5):
             # Seperate the tail sprite into the last element
             sprite = self._bodyimg if i < 4 else self._tailimg
@@ -155,6 +161,22 @@ class Snake:
             self.head.change_sprite(self._headimg[self._head_index])
             self._time_frame = 0
 
+        # Updates the buff duration and buff icon alpha value
+        if self._buff_duration > 0:
+            # Update the duration, alpha value based on duration left
+            self._buff_duration -= time_delta
+            alpha = int(self._buff_duration / self.BUFF_DURATION * 255)
+            self.buff_icon.set_alpha(alpha)
+            # Create the Buff Rect as a reference for the Buff Counter
+            self._buff_rect = self.head.rect.copy()
+            self._buff_rect.move_ip(-5, -33)
+            text_rect = self._buff_rect.copy()
+            text_rect.move_ip(15, -5)
+            # Apply position to the buff counter label and set the alpha
+            self._buff_counter.set_position(text_rect)
+            self._buff_counter.set_text(f"{int(self._buff_duration)}")
+            self._buff_counter.set_text_alpha(alpha)
+
     def draw(self, screen):
         """ Draws the snake parts with body first then lastly the head. """
         # Draws the Body Parts first.
@@ -171,6 +193,10 @@ class Snake:
 
         # Lastly Draw the Head
         self.head.draw(screen)
+
+        # Draw the Buff Icon if there is a buff applied
+        if self.buff_icon:
+            screen.blit(self.buff_icon, self._buff_rect)
 
     def _create_turn_covers(self):
         """
@@ -202,8 +228,9 @@ class Snake:
                     bg_rect = cover_rect.clamp(self.bg.get_rect())
                     bg_cover = self.bg.subsurface(bg_rect)
                     turn_cover = get_cover(first, second)
-                    snake_cover = SnakeCover(cover_rect, turn_cover, bg_cover)
-                    self.covers.append(snake_cover)
+                    if turn_cover:
+                        self.covers.append(SnakeCover(cover_rect, turn_cover,
+                                                      bg_cover))
                 else:
                     # If it exists, reset the delay counter
                     existing[0].reset_delay()
@@ -221,6 +248,25 @@ class Snake:
         # And update the new tail to its new sprite tail image
         self.body[-1].change_sprite(self._bodyimg)
         last.change_sprite(self._tailimg, self.body[-1].direction)
+
+    def apply_buff(self, buff):
+        """
+        Applies the buff to the snake. Get the image of buff item.
+        Determine the effect based on the value of the buff and the
+        name of the buff.
+        """
+        self._buff_duration = self.BUFF_DURATION
+
+        if self._buff_counter:
+            self._buff_counter.kill()
+            self._buff_counter = None
+
+        if buff.name == "speedup":
+            # Set the icon and create the buff label counter
+            self.buff_icon = pygame.transform.scale(buff.image, (28, 28))
+            self._buff_counter = pygame_gui.elements.UILabel(
+                relative_rect=self.head.rect, text=f"{self.BUFF_DURATION}"
+            )
 
     def die(self):
         """ Changes the sprite of the head of snake to dead sprite. """
@@ -281,7 +327,6 @@ class SnakePart(Sprite):
         movement so that it will be passed to the next part in the list.
         Its next movement also will be set based on the passed velocity.
         """
-        old_direction = None
         if (
             abs(self.rect.x - self._position.x) >= Snake.SIZE or
             abs(self.rect.y - self._position.y) >= Snake.SIZE
@@ -290,9 +335,10 @@ class SnakePart(Sprite):
             self._movement = self._next_direction
             self._position = pygame.Vector2(self.rect.x, self.rect.y)
             self._normalize_sprite()
+            self.rect.move_ip(self._movement.x, self._movement.y)
+            return old_direction
 
         self.rect.move_ip(self._movement.x, self._movement.y)
-        return old_direction
 
     def draw(self, screen):
         """ Draw this individual part to the screen. """
@@ -305,6 +351,11 @@ class SnakePart(Sprite):
             case "topright": self.rect.topright = (x, y)
             case "bottomleft": self.rect.bottomleft = (x, y)
             case "bottomright": self.rect.bottomright = (x, y)
+
+    def set_speed(self, speed):
+        """ Sets the new speed of the next direction and current movement. """
+        self._movement = self._movement / Snake.SPEED * speed
+        self._next_direction = self._next_direction / Snake.SPEED * speed
 
     def stop(self):
         """ Stops the movement and next movement of this snake part. """

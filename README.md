@@ -126,6 +126,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - April 30, 2024
   - Implementation of SpeedUp Class that spawns a speedup item with arrow up effects.
   - Updated particles effect to include a floating type of animation.
+- May 1, 2024
+  - Added Collision to snake head and items. Implemented Buff Icon on the Snake Head to show the current buff effect.
 
 <br>
 <b>This project is currently under development.</b>

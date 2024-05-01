@@ -355,6 +355,17 @@ class Interface:
         self._floaters.append(floater)
         self._floaters.append(point_floater)
 
+    def spawn_buff_label(self, buff_icon, position, buff_value, points):
+        """ Spawns a floating label that shows buff acquired and points. """
+        buff_float = Floater(name="buff", position=position - (35, 0),
+                             dimension=(35, 30), text=f"+{buff_value}",
+                             icon=buff_icon, isize=30)
+        point_floater = Floater(name="points", position=position + (30, 0),
+                                dimension=(40, 30), text=f"{points}",
+                                icon=self.score_icon, isize=25)
+        self._floaters.append(buff_float)
+        self._floaters.append(point_floater)
+
     def update_score(self, score):
         """ Updates the score label with current score of the game. """
         self._score_lbl.set_text(f"SCORE: {score}")

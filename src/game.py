@@ -85,12 +85,16 @@ class Game:
             # Update the snake if it collides with the food and eats it
             self.snake_eat_food_update(self.apple)
             self.snake_eat_food_update(self.golden_apple)
-            # Check if the snake head collides with its body parts
-            self.snake_collide_self_checker(time_delta)
+
+            # Update the snake if it collides with the items and eats it
+            self.snake_eat_items_update(self.speedup)
 
             # Update the food objects for its animation states
             self.apple.update(time_delta)
             self.golden_apple.update(time_delta)
+
+            # Check if the snake head collides with its body parts
+            self.snake_collide_self_checker(time_delta)
 
             # Update the buff items for animation states
             self.speedup.update(time_delta)
@@ -111,13 +115,19 @@ class Game:
         Returns False for it to signal the game loop to stop.
         Custom events of some game objects are also handled here.
         """
+        # HELPER FUNCTIONS FOR THE GAME EVENTS
         def instantiate_foods():
             self.apple = Food(filename="apple.png", points=10, regen=2)
             self.golden_apple = FoodBuff(filename="goldapple.png",
                                          points=50, regen=5)
 
         def instantiate_items():
-            self.speedup = SpeedUp(filename="speedup.png", points=0, speed=5)
+            self.speedup = SpeedUp(name="speedup", filename="speedup.png",
+                                   points=20, value=5)
+
+        def all_territories():
+            return [self.apple.territory, self.golden_apple.territory,
+                    self.speedup.territory] + self.snake.rects
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -170,21 +180,14 @@ class Game:
             # SPAWN FOOD EVENT
             if self.state == GAMESTATE.PLAY:
                 if event.type == Food.SPAWN_FOOD_EVENT:
-                    # add the snake part rects and golden apple off limit area
-                    limits = self.snake.rects + [self.golden_apple.territory]
-                    self.apple.spawn(off_limits_rects=limits)
+                    self.apple.spawn(off_limits_rects=all_territories())
                 if event.type == FoodBuff.SPAWN_FOOD_BUFF_EVENT:
-                    # add the snake part rects and golden apple off limit area
-                    limits = self.snake.rects + [self.apple.territory]
-                    self.golden_apple.spawn(off_limits_rects=limits)
+                    self.golden_apple.spawn(off_limits_rects=all_territories())
 
             # SPAWN ITEMS EVENT
             if self.state == GAMESTATE.PLAY:
                 if event.type == SpeedUp.SPAWN_SPEED_UP_EVENT:
-                    # add the snake part rects and all foods for off limit area
-                    limits = (self.snake.rects + [self.apple.territory,
-                              self.golden_apple.territory])
-                    self.speedup.spawn(off_limits_rects=limits)
+                    self.speedup.spawn(off_limits_rects=all_territories())
 
         return True
 
@@ -257,7 +260,7 @@ class Game:
 
     def snake_eat_food_update(self, food):
         """
-        Checks if the snake head collides with the current food.
+        Checks if the snake head collides with the specified food.
         If it collides then destroy the food and grow the snake.
         """
         if food.spawned:
@@ -275,6 +278,25 @@ class Game:
                 # Destroy the apple and grow the snake
                 self.snake.grow()
                 food.destroy()
+
+    def snake_eat_items_update(self, item):
+        """
+        Checks if the snake head collides with the specified item.
+        If it collides determine the type of item and apply the
+        buff into the snake object.
+        """
+        if item.spawned:
+            if self.snake.head.bounds.colliderect(item.bounds):
+                # Display a buff icon and points floater
+                item_pos = pygame.Vector2(item.bounds.topleft)
+                self.interface.spawn_buff_label(buff_icon=item.image,
+                                                position=item_pos,
+                                                buff_value=item.value,
+                                                points=item.points)
+                # Apply the buff item to the snake head
+                self.snake.apply_buff(item)
+                # Destroy the item
+                item.destroy()
 
     def snake_collide_self_checker(self, time_delta):
         """

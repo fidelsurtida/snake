@@ -204,6 +204,16 @@
       }
    },
 
+   "@buff_lbl":
+   {
+      "prototype": "@regen_lbl",
+      "colours":
+      {
+         "normal_text": "#0ab4f2",
+         "text_shadow": "#062d6b"
+      }
+   },
+
    "@points_lbl":
    {
       "prototype": "@regen_lbl",
