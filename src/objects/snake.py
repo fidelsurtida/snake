@@ -181,10 +181,9 @@ class Snake:
             self._buff_counter.set_text_alpha(alpha)
         # If buff duration reaches 0 then remove the buff icon
         elif self._buff_duration <= 0:
-            # Reset the snake speed to default
-            self.set_snake_speed(Config.SNAKE_SPEED)
-            # Reset the buff attributes
+            # Reset the buff attributes and snake speed
             if self._buff_counter:
+                self.set_snake_speed(Config.SNAKE_SPEED)
                 self._buff_counter.kill()
                 self._buff_counter = None
             self.buff_icon = None
@@ -301,6 +300,7 @@ class Snake:
         self.head.change_sprite(self._dead_headimg, self.direction)
         # Remove the buff counter if available
         if self._buff_counter:
+            self.set_snake_speed(Config.SNAKE_SPEED)
             self._buff_counter.kill()
 
     @property
@@ -333,10 +333,10 @@ class SnakePart(Sprite):
         self._position = pygame.Vector2(posx - Snake.SIZE // 2,
                                         posy - Snake.SIZE // 2)
         self._next_direction = direction
-        self._future_position = self._position
         self._movement = direction
         self.rect = pygame.Rect(self._position.x, self._position.y,
                                 Snake.SIZE, Snake.SIZE)
+        self._future_position = self.future_bounds.topleft
         # Save 2 images, the original _img is used for correctly rotating
         self.image = pygame.transform.scale(image, (Snake.SIZE, Snake.SIZE))
         self._img = image
@@ -384,10 +384,6 @@ class SnakePart(Sprite):
             case "topright": self.rect.topright = (x, y)
             case "bottomleft": self.rect.bottomleft = (x, y)
             case "bottomright": self.rect.bottomright = (x, y)
-        # If reset is true then update the positional attributes
-        if reset:
-            self._position = pygame.Vector2(self.rect.x, self.rect.y)
-            self._future_position = self.future_bounds.topleft
 
     def set_speed(self, speed):
         """ Sets the new speed of the next direction and current movement. """

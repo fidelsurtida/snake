@@ -130,6 +130,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added Collision to snake head and items. Implemented Buff Icon on the Snake Head to show the current buff effect.
 - May 2, 2024
   - Added Code to apply speed buff effect to snake parts. And to reset the speed after buff duration.
+  - Removed the looping of snake body parts on window boundaries. It will die instead when bumped window bounds.
 
 <br>
 <b>This project is currently under development.</b>

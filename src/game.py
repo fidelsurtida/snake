@@ -30,9 +30,7 @@ class Game:
         self.screen = screen
         self.manager = manager
         self.state = GAMESTATE.MENU
-        self.bounderies = pygame.Rect(-Snake.SIZE, 0,
-                                      self.WIDTH + Snake.SIZE * 2,
-                                      self.HEIGHT + Snake.SIZE)
+        self.bounderies = pygame.Rect(0, 50, self.WIDTH, self.HEIGHT - 60)
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
@@ -41,7 +39,7 @@ class Game:
         # These variables are used for various flags regarding the snake
         self._auto_path_counter = 0
         self._gameover_counter = 0.12
-        self._uturn = False
+        self._uturn = None
         # Create the Snake object as the player and pass the game background
         self.snake = Snake(background=self.bg)
         # Create a starting Food Object (creation at play button press)
@@ -95,6 +93,8 @@ class Game:
 
             # Check if the snake head collides with its body parts
             self.snake_collide_self_checker(time_delta)
+            # Check if the snake collides with the window bounderies
+            self.snake_bump_bounderies_update()
 
             # Update the buff items for animation states
             self.speedup.update(time_delta)
@@ -103,8 +103,6 @@ class Game:
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
             # Update the movement of the snake
             self.snake.update(time_delta)
-            # Update the snake to loop its movement after hitting the bounderies
-            self.snake_loop_bounderies_update()
 
         # Update the Interface Manager for animation of some elements
         self.interface.update()
@@ -212,51 +210,51 @@ class Game:
     def snake_menu_auto_path_update(self, time_delta):
         """
         This will randomize the movement of the snake in the menu.
-        It must not go over the top and bottom side of window because
-        the game panel is currently hidden in the MENU state.
-        Every 2 seconds it will randomize a direction of the head.
+        It must not go over the bounderies of the window
+        Every second it will randomize a direction of the head.
         """
         xhead, yhead = self.snake.head.bounds.topleft
         direction = self.snake.head.direction
-        topmax, botmax = 90, self.HEIGHT - 90
-        leftmax, rightmax = 100, self.WIDTH - 100
+        topmax, botmax = 80, self.HEIGHT - 100
+        leftmax, rightmax = 80, self.WIDTH - 80
 
         if not self._uturn and (yhead < topmax or yhead > botmax):
             self.snake.move(random.choice([Snake.LEFT, Snake.RIGHT]))
-            self._auto_path_counter = 0
-            self._uturn = True
+            self._auto_path_counter = 0.5
+            self._uturn = [Snake.DOWN] if yhead < topmax else [Snake.UP]
 
-        if self._auto_path_counter >= 2 and (leftmax < xhead < rightmax):
-            # If uturn, then directly change the direction
-            if self._uturn:
-                movement = Snake.DOWN if yhead < topmax else Snake.UP
-                self.snake.move(movement)
-                self._uturn = False
+        if not self._uturn and (xhead < leftmax or xhead > rightmax):
+            self.snake.move(random.choice([Snake.UP, Snake.DOWN]))
+            self._auto_path_counter = 0.5
+            self._uturn = [Snake.RIGHT] if xhead < leftmax else [Snake.LEFT]
 
+        if self._auto_path_counter >= 1:
             # Remove the current direction and its opposite direction
             moves = [Snake.UP, Snake.DOWN, Snake.LEFT, Snake.RIGHT]
-            to_remove = [direction, direction * -1]
-            moves = [move for move in moves if move not in to_remove]
+            if self._uturn:
+                moves = self._uturn
+            else:
+                to_remove = [direction, direction * -1]
+                moves = [move for move in moves if move not in to_remove]
 
             # Randomize the next valid moves
             next_move = random.choice(moves)
             self.snake.move(next_move)
             self._auto_path_counter = 0
+            self._uturn = None
 
         self._auto_path_counter += time_delta
 
-    def snake_loop_bounderies_update(self):
+    def snake_bump_bounderies_update(self):
         """
-        Check if each snake part collides with window bounderies
-        If it collides then the part should appear on the opposite side.
+        Check if each head part collides with window bounderies
+        If it collides then the snake is dead, and it's game over.
+        Set the game over counter to 0, the code to trigger the whole
+        game over event is found in the snake_collide_self_checker.
         """
-        snake_parts = self.snake.parts
-        for part in snake_parts:
-            if part.bounds.clamp(self.bounderies) != part.bounds:
-                bounds = part.bounds.topleft + pygame.Vector2(Snake.SIZE)
-                x = (bounds.x % (self.WIDTH + Snake.SIZE)) - Snake.SIZE
-                y = ((bounds.y - Snake.SIZE) % self.HEIGHT)
-                part.teleport(x, y, reset=True)
+        snake_head = self.snake.head
+        if snake_head.bounds.clamp(self.bounderies) != snake_head.bounds:
+            self._gameover_counter = 0
 
     def snake_eat_food_update(self, food):
         """
