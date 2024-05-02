@@ -163,9 +163,12 @@ class Snake:
 
         # Updates the buff duration and buff icon alpha value
         if self._buff_duration > 0:
+            alpha = 255
             # Update the duration, alpha value based on duration left
             self._buff_duration -= time_delta
-            alpha = int(self._buff_duration / self.BUFF_DURATION * 255)
+            # Update the alpha only in last 3 seconds of the buff duration
+            if self._buff_duration <= 3:
+                alpha = max(0, int(self._buff_duration / 3 * 255))
             self.buff_icon.set_alpha(alpha)
             # Create the Buff Rect as a reference for the Buff Counter
             self._buff_rect = self.head.rect.copy()
@@ -174,8 +177,18 @@ class Snake:
             text_rect.move_ip(15, -5)
             # Apply position to the buff counter label and set the alpha
             self._buff_counter.set_position(text_rect)
-            self._buff_counter.set_text(f"{int(self._buff_duration)}")
+            self._buff_counter.set_text(f"{round(self._buff_duration):.0f}")
             self._buff_counter.set_text_alpha(alpha)
+        # If buff duration reaches 0 then remove the buff icon
+        elif self._buff_duration <= 0:
+            # Reset the snake speed to default
+            self.set_snake_speed(Config.SNAKE_SPEED)
+            # Reset the buff attributes
+            if self._buff_counter:
+                self._buff_counter.kill()
+                self._buff_counter = None
+            self.buff_icon = None
+            self._buff_rect = None
 
     def draw(self, screen):
         """ Draws the snake parts with body first then lastly the head. """
@@ -262,16 +275,33 @@ class Snake:
             self._buff_counter = None
 
         if buff.name == "speedup":
+            # Change the snake speed and constants
+            self.set_snake_speed(buff.value)
             # Set the icon and create the buff label counter
             self.buff_icon = pygame.transform.scale(buff.image, (28, 28))
             self._buff_counter = pygame_gui.elements.UILabel(
                 relative_rect=self.head.rect, text=f"{self.BUFF_DURATION}"
             )
 
+    def set_snake_speed(self, speed):
+        """ Updates the speed of the Snake object and Class constants. """
+        # Change the part speed based on the buff value
+        for part in self.parts:
+            part.set_speed(speed)
+        # Update the Snake class speed constants
+        Snake.SPEED = speed
+        Snake.UP = pygame.Vector2(0, -speed)
+        Snake.DOWN = pygame.Vector2(0, speed)
+        Snake.LEFT = pygame.Vector2(-speed, 0)
+        Snake.RIGHT = pygame.Vector2(speed, 0)
+
     def die(self):
         """ Changes the sprite of the head of snake to dead sprite. """
         self.dead = True
         self.head.change_sprite(self._dead_headimg, self.direction)
+        # Remove the buff counter if available
+        if self._buff_counter:
+            self._buff_counter.kill()
 
     @property
     def parts(self):
@@ -303,6 +333,7 @@ class SnakePart(Sprite):
         self._position = pygame.Vector2(posx - Snake.SIZE // 2,
                                         posy - Snake.SIZE // 2)
         self._next_direction = direction
+        self._future_position = self._position
         self._movement = direction
         self.rect = pygame.Rect(self._position.x, self._position.y,
                                 Snake.SIZE, Snake.SIZE)
@@ -333,9 +364,11 @@ class SnakePart(Sprite):
         ):
             old_direction = self._movement
             self._movement = self._next_direction
+            self.rect.topleft = self._future_position
             self._position = pygame.Vector2(self.rect.x, self.rect.y)
-            self._normalize_sprite()
+            self._future_position = self.future_bounds.topleft
             self.rect.move_ip(self._movement.x, self._movement.y)
+            self._normalize_sprite()
             return old_direction
 
         self.rect.move_ip(self._movement.x, self._movement.y)
@@ -344,13 +377,17 @@ class SnakePart(Sprite):
         """ Draw this individual part to the screen. """
         screen.blit(self.image, self.rect)
 
-    def teleport(self, x, y, *, corner="topleft"):
+    def teleport(self, x, y, *, corner="topleft", reset=False):
         """ Teleports the position of this snake part. """
         match corner:
             case "topleft": self.rect.topleft = (x, y)
             case "topright": self.rect.topright = (x, y)
             case "bottomleft": self.rect.bottomleft = (x, y)
             case "bottomright": self.rect.bottomright = (x, y)
+        # If reset is true then update the positional attributes
+        if reset:
+            self._position = pygame.Vector2(self.rect.x, self.rect.y)
+            self._future_position = self.future_bounds.topleft
 
     def set_speed(self, speed):
         """ Sets the new speed of the next direction and current movement. """

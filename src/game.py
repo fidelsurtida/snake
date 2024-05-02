@@ -256,7 +256,7 @@ class Game:
                 bounds = part.bounds.topleft + pygame.Vector2(Snake.SIZE)
                 x = (bounds.x % (self.WIDTH + Snake.SIZE)) - Snake.SIZE
                 y = ((bounds.y - Snake.SIZE) % self.HEIGHT)
-                part.teleport(x, y)
+                part.teleport(x, y, reset=True)
 
     def snake_eat_food_update(self, food):
         """
