@@ -10,7 +10,6 @@ Project Start: March 27, 2024
 """
 import pygame
 import pygame_gui
-from pathlib import Path
 from src.config import Config
 from src.game import Game
 

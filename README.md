@@ -133,6 +133,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Removed the looping of snake body parts on window boundaries. It will die instead when bumped window bounds.
 - May 3, 2024
   - Added wall sprites and fixed wall bounderies. Fixed auto path code of snake in main menu screen.
+  - Fixed Last moments image capture. And bug fix on transparent speedup floater.
 
 <br>
 <b>This project is currently under development.</b>

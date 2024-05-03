@@ -260,17 +260,6 @@ class Game:
 
         self._auto_path_counter += time_delta
 
-    def snake_bump_bounderies_update(self):
-        """
-        Check if each head part collides with window bounderies
-        If it collides then the snake is dead, and it's game over.
-        Set the game over counter to 0, the code to trigger the whole
-        game over event is found in the snake_collide_self_checker.
-        """
-        snake_head = self.snake.head
-        if snake_head.bounds.clamp(self.bounderies) != snake_head.bounds:
-            self._gameover_counter = 0
-
     def snake_eat_food_update(self, food):
         """
         Checks if the snake head collides with the specified food.
@@ -302,7 +291,7 @@ class Game:
             if self.snake.head.bounds.colliderect(item.bounds):
                 # Display a buff icon and points floater
                 item_pos = pygame.Vector2(item.bounds.topleft)
-                self.interface.spawn_buff_label(buff_icon=item.image,
+                self.interface.spawn_buff_label(buff_icon=item.image.copy(),
                                                 position=item_pos,
                                                 buff_value=item.value,
                                                 points=item.points)
@@ -310,6 +299,17 @@ class Game:
                 self.snake.apply_buff(item)
                 # Destroy the item
                 item.destroy()
+
+    def snake_bump_bounderies_update(self):
+        """
+        Check if each head part collides with window bounderies
+        If it collides then the snake is dead, and it's game over.
+        Set the game over counter to 0, the code to trigger the whole
+        game over event is found in the snake_collide_self_checker.
+        """
+        snake_head = self.snake.head
+        if snake_head.bounds.clamp(self.bounderies) != snake_head.bounds:
+            self._gameover_counter = 0
 
     def snake_collide_self_checker(self, time_delta):
         """
@@ -335,7 +335,7 @@ class Game:
             self.snake.draw(self.screen)
 
             # Set the moments image of the snake in the gameover screen
-            width, height, (x, y) = 340, 200, self.snake.head.bounds.topleft
+            width, height, (x, y) = 320, 180, self.snake.head.bounds.topleft
             snakepos = (x - (width // 3) - 20, y - (height // 3))
             moments_rect = pygame.Rect(*snakepos, width, height)
             moments_rect = moments_rect.clamp(self.screen.get_rect())

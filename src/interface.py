@@ -212,7 +212,7 @@ class Interface:
         )
         # Create the image holder for the last moments
         self.moments_image = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect(0, 0, picwidth, picheight),
+            relative_rect=pygame.Rect(0, 0, picwidth - 20, picheight - 20),
             image_surface=pygame.Surface((picwidth, picheight)),
             container=moments_panel
         )
@@ -357,6 +357,7 @@ class Interface:
 
     def spawn_buff_label(self, buff_icon, position, buff_value, points):
         """ Spawns a floating label that shows buff acquired and points. """
+        buff_icon.set_alpha(255)
         buff_float = Floater(name="buff", position=position - (35, 0),
                              dimension=(35, 30), text=f"+{buff_value}",
                              icon=buff_icon, isize=30)
