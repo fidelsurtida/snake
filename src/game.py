@@ -30,12 +30,12 @@ class Game:
         self.screen = screen
         self.manager = manager
         self.state = GAMESTATE.MENU
-        self.bounderies = pygame.Rect(0, 50, self.WIDTH, self.HEIGHT - 60)
+        self.bounderies = pygame.Rect(25, 25, self.WIDTH - 50, self.HEIGHT - 50)
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
-        # Load the game background
-        self.bg = pygame.image.load(Config.assets_path("background.png"))
+        # Load the game background and the panel image
+        self._load_game_backgrounds()
         # These variables are used for various flags regarding the snake
         self._auto_path_counter = 0
         self._gameover_counter = 0.12
@@ -50,6 +50,16 @@ class Game:
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
+
+    def _load_game_backgrounds(self):
+        """ Loads the background image and the walls on each window. """
+        self.bg = pygame.image.load(Config.assets_path("background.png"))
+        panel = pygame.image.load(Config.assets_path("panel.png"))
+        # Get only a part of the panel background to make as a wall
+        self.wall_top = panel.subsurface(0, 25, 994, 25)
+        self.wall_bottom = pygame.transform.rotate(self.wall_top, 180)
+        self.wall_left = pygame.transform.rotate(self.wall_top, 90)
+        self.wall_right = pygame.transform.rotate(self.wall_top, -90)
 
     def reset_game(self):
         """
@@ -195,9 +205,14 @@ class Game:
         """
         # Draw the background first
         self.screen.blit(self.bg, (0, 0))
+        # Draw the walls on every boundery of the screen
+        self.screen.blit(self.wall_left, (0, 0))
+        self.screen.blit(self.wall_right, (self.WIDTH - 25, 0))
+        self.screen.blit(self.wall_top, (15, 0))
+        self.screen.blit(self.wall_bottom, (15, self.HEIGHT - 25))
+
         # Draw the game objects
         self.snake.draw(self.screen)
-
         # Draw game objects that are only viewable in PLAY mode
         if self.state == GAMESTATE.PLAY:
             self.apple.draw(self.screen)
@@ -215,17 +230,17 @@ class Game:
         """
         xhead, yhead = self.snake.head.bounds.topleft
         direction = self.snake.head.direction
-        topmax, botmax = 80, self.HEIGHT - 100
-        leftmax, rightmax = 80, self.WIDTH - 80
+        topmax, botmax = 60, self.HEIGHT - 120
+        leftmax, rightmax = 60, self.WIDTH - 120
 
         if not self._uturn and (yhead < topmax or yhead > botmax):
             self.snake.move(random.choice([Snake.LEFT, Snake.RIGHT]))
-            self._auto_path_counter = 0.5
+            self._auto_path_counter = 0.7
             self._uturn = [Snake.DOWN] if yhead < topmax else [Snake.UP]
 
         if not self._uturn and (xhead < leftmax or xhead > rightmax):
             self.snake.move(random.choice([Snake.UP, Snake.DOWN]))
-            self._auto_path_counter = 0.5
+            self._auto_path_counter = 0.7
             self._uturn = [Snake.RIGHT] if xhead < leftmax else [Snake.LEFT]
 
         if self._auto_path_counter >= 1:

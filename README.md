@@ -131,6 +131,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - May 2, 2024
   - Added Code to apply speed buff effect to snake parts. And to reset the speed after buff duration.
   - Removed the looping of snake body parts on window boundaries. It will die instead when bumped window bounds.
+- May 3, 2024
+  - Added wall sprites and fixed wall bounderies. Fixed auto path code of snake in main menu screen.
 
 <br>
 <b>This project is currently under development.</b>
