@@ -30,7 +30,7 @@ class Game:
         self.screen = screen
         self.manager = manager
         self.state = GAMESTATE.MENU
-        self.bounderies = pygame.Rect(25, 25, self.WIDTH - 50, self.HEIGHT - 50)
+        self.bounderies = pygame.Rect(10, 10, self.WIDTH - 20, self.HEIGHT - 20)
 
         # Initialize the game interface manager
         self.interface = Interface(screen, manager)
@@ -41,7 +41,7 @@ class Game:
         self._gameover_counter = 0.12
         self._uturn = None
         # Create the Snake object as the player and pass the game background
-        self.snake = Snake(background=self.bg)
+        self.snake = Snake(background=self.bgwalled)
         # Create a starting Food Object (creation at play button press)
         self.apple = None
         self.golden_apple = None
@@ -60,13 +60,20 @@ class Game:
         self.wall_bottom = pygame.transform.rotate(self.wall_top, 180)
         self.wall_left = pygame.transform.rotate(self.wall_top, 90)
         self.wall_right = pygame.transform.rotate(self.wall_top, -90)
+        # Create a walled background for the snake
+        self.bgwalled = pygame.Surface((self.WIDTH, self.HEIGHT))
+        self.bgwalled.blit(self.bg, (0, 0))
+        self.bgwalled.blit(self.wall_left, (0, 0))
+        self.bgwalled.blit(self.wall_right, (self.WIDTH - 25, 0))
+        self.bgwalled.blit(self.wall_top, (15, 0))
+        self.bgwalled.blit(self.wall_bottom, (15, self.HEIGHT - 25))
 
     def reset_game(self):
         """
         This will be called in events to reset the game state to new game.
         All variables that needs to return to initial value should be put here.
         """
-        self.snake = Snake(background=self.bg)
+        self.snake = Snake(background=self.bgwalled)
         self._gameover_counter = 0.12
         self._auto_path_counter = 0
         self._uturn = False

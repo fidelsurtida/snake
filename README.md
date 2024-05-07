@@ -136,6 +136,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed Last moments image capture. And bug fix on transparent speedup floater.
 - May 7, 2024
   - Fixed bug on snake grow which the tail appears disconnected on certain turns.
+  - Fixed bug on turn covers to include wall bounds image.
 
 <br>
 <b>This project is currently under development.</b>
