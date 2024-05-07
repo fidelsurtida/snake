@@ -134,6 +134,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - May 3, 2024
   - Added wall sprites and fixed wall bounderies. Fixed auto path code of snake in main menu screen.
   - Fixed Last moments image capture. And bug fix on transparent speedup floater.
+- May 7, 2024
+  - Fixed bug on snake grow which the tail appears disconnected on certain turns.
 
 <br>
 <b>This project is currently under development.</b>

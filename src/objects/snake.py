@@ -57,6 +57,7 @@ class Snake:
         self.lifetime = Snake.LIFETIME
         self.dead = False
         self.buff_icon = None
+        self._old_tail_direction = None
         self._buff_duration = 0
         self._buff_counter = None
         self._buff_rect = None
@@ -237,14 +238,25 @@ class Snake:
                 existing = [c for c in self.covers if c.rect == cover_rect]
                 # If future_bounds is not found in current covers, create one
                 if not existing:
-                    bg_rect = cover_rect.clamp(self.bg.get_rect())
-                    bg_cover = self.bg.subsurface(bg_rect)
+                    bg_cover = self.bg.subsurface(cover_rect)
                     turn_cover = get_cover(first, second)
                     if turn_cover:
                         self.covers.append(SnakeCover(cover_rect, turn_cover,
                                                       bg_cover))
                 else:
                     # If it exists, reset the delay counter
+                    existing[0].reset_delay()
+
+        # Check the last part of the body and the pending tail if it needs
+        # to refresh / reset delay an existing cover.
+        if self.tails:
+            first, second = self.body[-1], self.tails[0]
+            if first.bounds.colliderect(second.bounds):
+                second.direction = self._old_tail_direction
+                cover_rect = second.future_bounds
+                second.direction = Snake.ZERO
+                existing = [c for c in self.covers if c.rect == cover_rect]
+                if existing:
                     existing[0].reset_delay()
 
     def grow(self):
@@ -254,6 +266,7 @@ class Snake:
         queue of next tails.
         """
         last = copy.deepcopy(self.body[-1])
+        self._old_tail_direction = last.direction
         last.stop()
         self.tails.append(last)
         # Change the last element of body to body sprite
