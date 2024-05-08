@@ -22,6 +22,7 @@ class Particle:
     class TYPE(Enum):
         DEFAULT = 0
         FLOATING = 1
+        FALLING = 2
 
     def __init__(self, *, image, spawn_rect, size, lifetime, animation):
         """
@@ -48,9 +49,15 @@ class Particle:
     def _spawn(self):
         """ Spawns the particle with initial values and random location. """
         # Modify the respawn of y if the animation is floating, make it lower
-        y_mod = self.size*2 if self.animation == Particle.TYPE.FLOATING else 0
+        y = random.randint(self.spawn_area.top, self.spawn_area.bottom)
+        if self.animation == Particle.TYPE.FLOATING:
+            y_mod = self.spawn_area.bottom - 10
+            y = random.randint(y_mod, self.spawn_area.bottom)
+        # If the animation is falling, spawn the particle on top
+        elif self.animation == Particle.TYPE.FALLING:
+            y_mod = self.spawn_area.top + 10
+            y = random.randint(self.spawn_area.top - 15, y_mod)
         x = random.randint(self.spawn_area.left, self.spawn_area.right)
-        y = random.randint(self.spawn_area.top + y_mod, self.spawn_area.bottom)
 
         self._position = pygame.Vector2(x, y)
         self.rect = pygame.Rect(x, y, 1, 1)
@@ -87,8 +94,9 @@ class Particle:
             size = int(self.size * (self._lifetimer / halftime))
 
         # Change the y modifier to go up if the animation is floating
-        if self.animation == Particle.TYPE.FLOATING:
-            y_modifier = int(self.size * 2 * (self._lifetimer / self.lifetime))
+        y_modifier = int(self.size * 2 * (self._lifetimer / self.lifetime))
+        if self.animation == Particle.TYPE.FALLING:
+            y_modifier *= -1
 
         # Change the animation on the second half of lifetime based on type
         if self._lifetimer >= halftime:
@@ -97,7 +105,8 @@ class Particle:
                 size = int(self.size * (self._lifetimer / self.lifetime))
                 size = self.size - size
             # Else if its floating, update the alpha to invisible
-            elif self.animation == Particle.TYPE.FLOATING:
+            elif (self.animation == Particle.TYPE.FLOATING or
+                  self.animation == Particle.TYPE.FALLING):
                 size = self.size
                 time_modifier = (self._lifetimer - halftime) / halftime
                 alpha = 160 - int(160 * time_modifier)

@@ -3,6 +3,8 @@ Game Class - game.py
 -----------------------------------------------------------
 This class is responsible for handling the game logic,
 keyboard and window events, and rendering the game objects.
+This handles the main logic decisions of the game and
+calls object methods accordingly.
 -----------------------------------------------------------
 Author: Fidel Jesus O. Surtida I
 -----------------------------------------------------------
@@ -17,6 +19,7 @@ from src.objects.snake import Snake
 from src.objects.food import Food
 from src.objects.foodbuff import FoodBuff
 from src.objects.speedup import SpeedUp
+from src.objects.slowdown import SlowDown
 
 
 class Game:
@@ -47,6 +50,8 @@ class Game:
         self.golden_apple = None
         # Create the starting item buffs (creation at play button press)
         self.speedup = None
+        # Create the debuff items (creation at play button press)
+        self.slowdown = None
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
@@ -103,6 +108,7 @@ class Game:
 
             # Update the snake if it collides with the items and eats it
             self.snake_eat_items_update(self.speedup)
+            self.snake_eat_items_update(self.slowdown)
 
             # Update the food objects for its animation states
             self.apple.update(time_delta)
@@ -115,6 +121,8 @@ class Game:
 
             # Update the buff items for animation states
             self.speedup.update(time_delta)
+            # Update the debuff items for animation states
+            self.slowdown.update(time_delta)
 
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
@@ -138,11 +146,14 @@ class Game:
 
         def instantiate_items():
             self.speedup = SpeedUp(name="speedup", filename="speedup.png",
-                                   points=20, value=5)
+                                   points=20, value=5, negative=False)
+            self.slowdown = SlowDown(name="slowdown", filename="snail.png",
+                                     points=50, value=2, negative=True)
 
         def all_territories():
-            return [self.apple.territory, self.golden_apple.territory,
-                    self.speedup.territory] + self.snake.rects
+            return ([self.apple.territory, self.golden_apple.territory,
+                    self.speedup.territory, self.slowdown.territory] +
+                    self.snake.rects)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -203,6 +214,8 @@ class Game:
             if self.state == GAMESTATE.PLAY:
                 if event.type == SpeedUp.SPAWN_SPEED_UP_EVENT:
                     self.speedup.spawn(off_limits_rects=all_territories())
+                if event.type == SlowDown.SPAWN_SLOW_DOWN_EVENT:
+                    self.slowdown.spawn(off_limits_rects=all_territories())
 
         return True
 
@@ -225,6 +238,7 @@ class Game:
             self.apple.draw(self.screen)
             self.golden_apple.draw(self.screen)
             self.speedup.draw(self.screen)
+            self.slowdown.draw(self.screen)
 
         # Draw the GUI elements from Inteface
         self.interface.draw()
@@ -301,7 +315,8 @@ class Game:
                 self.interface.spawn_buff_label(buff_icon=item.image.copy(),
                                                 position=item_pos,
                                                 buff_value=item.value,
-                                                points=item.points)
+                                                points=item.points,
+                                                negate=item.negative)
                 # Apply the buff item to the snake head
                 self.snake.apply_buff(item)
                 # Destroy the item

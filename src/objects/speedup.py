@@ -25,7 +25,7 @@ class SpeedUp(FoodBuff):
     LIFETIME_CONSTANT = Config.SPEEDUP_LIFETIME
     SIZE = Config.SPEEDUP_SIZE
 
-    def __init__(self, *, name, filename, points, value):
+    def __init__(self, *, name, filename, points, value, negative):
         """
         Extends the FoodBuff class with additional speed attributes.
         """
@@ -34,6 +34,7 @@ class SpeedUp(FoodBuff):
         self.lifetime = self.LIFETIME_CONSTANT
         self.value = value
         self.name = name
+        self.negative = negative
 
         # Create the Particle System for the SpeedUp
         arrow_up = super().PARTICLE_SHEET.subsurface(100, 0, 50, 50)

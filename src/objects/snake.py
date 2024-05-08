@@ -294,6 +294,14 @@ class Snake:
             self._buff_counter = pygame_gui.elements.UILabel(
                 relative_rect=self.head.rect, text=f"{self.BUFF_DURATION}"
             )
+        elif buff.name == "slowdown":
+            # Change the snake speed and constants
+            self.set_snake_speed(buff.value)
+            # Set the icon and create the buff label counter
+            self.buff_icon = pygame.transform.scale(buff.image, (28, 28))
+            self._buff_counter = pygame_gui.elements.UILabel(
+                relative_rect=self.head.rect, text=f"{self.BUFF_DURATION}"
+            )
 
     def set_snake_speed(self, speed):
         """ Updates the speed of the Snake object and Class constants. """

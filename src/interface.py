@@ -355,11 +355,12 @@ class Interface:
         self._floaters.append(floater)
         self._floaters.append(point_floater)
 
-    def spawn_buff_label(self, buff_icon, position, buff_value, points):
+    def spawn_buff_label(self, buff_icon, position, buff_value, points, negate):
         """ Spawns a floating label that shows buff acquired and points. """
         buff_icon.set_alpha(255)
+        vlabel = "-" if negate else "+"
         buff_float = Floater(name="buff", position=position - (35, 0),
-                             dimension=(35, 30), text=f"+{buff_value}",
+                             dimension=(35, 30), text=f"{vlabel}{buff_value}",
                              icon=buff_icon, isize=30)
         point_floater = Floater(name="points", position=position + (30, 0),
                                 dimension=(40, 30), text=f"{points}",
