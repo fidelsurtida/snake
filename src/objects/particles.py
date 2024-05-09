@@ -94,9 +94,10 @@ class Particle:
             size = int(self.size * (self._lifetimer / halftime))
 
         # Change the y modifier to go up if the animation is floating
-        y_modifier = int(self.size * 2 * (self._lifetimer / self.lifetime))
-        if self.animation == Particle.TYPE.FALLING:
-            y_modifier *= -1
+        if self.animation != Particle.TYPE.DEFAULT:
+            y_modifier = int(self.size * 2 * (self._lifetimer / self.lifetime))
+            if self.animation == Particle.TYPE.FALLING:
+                y_modifier *= -1
 
         # Change the animation on the second half of lifetime based on type
         if self._lifetimer >= halftime:

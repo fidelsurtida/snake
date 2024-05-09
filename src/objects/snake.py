@@ -449,6 +449,11 @@ class SnakePart(Sprite):
     def _normalize_sprite(self, direction=None):
         """ Rotates the sprite image based on the direction."""
         if self.image:
+            # Normalize the direction to the correct speed
+            if direction:
+                divisor = max(abs(direction.x), abs(direction.y))
+                direction = direction / divisor * Snake.SPEED
+            # Determine the correct sprite orientation
             index = direction or self._movement
             directions = [Snake.ZERO, Snake.DOWN, Snake.UP,
                           Snake.LEFT, Snake.RIGHT]
