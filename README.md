@@ -141,6 +141,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added a slowdown debuff class that spawns a slowdown item with arrow down effects.
 - May 9, 2024
   - Fixed particle animation on food buffs. Fixed Bug on change sprite of snake head when dead after buff wears off.
+  - Fixed snake head sprite detached on died state. Fixed item adding of score and balancing of spawn times.
 
 <br>
 <b>This project is currently under development.</b>

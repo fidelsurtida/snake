@@ -80,7 +80,7 @@ class Snake:
             snake_sheet.subsurface((1, 45, 40, 40)),
             snake_sheet.subsurface((1, 85, 40, 40))
         ]
-        self._dead_headimg = snake_sheet.subsurface((1, 122, 40, 42))
+        self._dead_headimg = snake_sheet.subsurface((1, 126, 40, 39))
         self._bodyimg = snake_sheet.subsurface((85, 85, 40, 40))
         self._tailimg = snake_sheet.subsurface((43, 85, 40, 40))
         # Get the 4 different turn parts image
