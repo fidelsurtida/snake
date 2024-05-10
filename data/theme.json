@@ -365,6 +365,50 @@
       }
    },
 
+   "#leaderboard_lbl":
+   {
+      "prototype": "#mont_font",
+      "colours":
+      {
+         "normal_text": "#cdcdcd",
+         "dark_bg": "#4D5B6C,#232932,#12161A,-90"
+      },
+      "font":
+      {
+         "size": "18"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "center"
+      }
+   },
+
+   "@entry_labels":
+   {
+      "prototype": "#mont_font",
+      "colours":
+      {
+         "normal_text": "#eee"
+      },
+      "font":
+      {
+         "size": "16"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "left"
+      }
+   },
+
+   "@entry_num_labels":
+   {
+      "prototype": "@entry_labels",
+      "font":
+      {
+         "size": "19"
+      }
+   },
+
    "#game_panel":
    {
       "images":
@@ -386,6 +430,34 @@
       "colours":
       {
          "dark_bg": "rgba(0, 0, 0, 100)"
+      }
+   },
+
+   "#leaderboard_panel":
+   {
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 70)",
+         "normal_border": "rgba(200, 200, 200, 50)"
+      },
+      "misc":
+      {
+         "shape": "rounded_rectangle",
+         "shape_corner_radius": "15",
+         "border_width": "5"
+      }
+   },
+
+   "@entry_panel":
+   {
+      "colours":
+      {
+         "dark_bg": "rgba(0, 0, 0, 30)",
+         "normal_border": "rgba(200, 200, 200, 50)"
+      },
+      "misc":
+      {
+         "border_width": "1"
       }
    },
 

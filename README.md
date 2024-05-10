@@ -142,6 +142,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - May 9, 2024
   - Fixed particle animation on food buffs. Fixed Bug on change sprite of snake head when dead after buff wears off.
   - Fixed snake head sprite detached on died state. Fixed item adding of score and balancing of spawn times.
+- May 10, 2024
+  - Added partial UI Design for the Top 3 Leaderboard in the menu screen.
 
 <br>
 <b>This project is currently under development.</b>
