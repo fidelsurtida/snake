@@ -44,7 +44,7 @@ class Interface:
         Creates the GUI for the MENU state of the game.
         """
         wtitle, htitle = self._WIDTH - 300, 100
-        lb_width, lb_height, item_width = wtitle - 20, 150, wtitle - 40
+        lb_width, lb_height, item_width = wtitle - 20, 165, wtitle - 40
         bwidth, bheight = 230, 70
         margin_y, hlbitem = 13, 40
         xtitle, ytitle = ((self._WIDTH - wtitle) / 2,
@@ -95,10 +95,10 @@ class Interface:
             container=self.menu_panel
         )
         # Create the developed by label
-        label_rect = pygame.Rect((self._WIDTH-400)/2, self._HEIGHT-45, 400, 20)
+        label_rect = pygame.Rect((self._WIDTH-410)/2, self._HEIGHT-60, 410, 20)
         pygame_gui.elements.UILabel(
             relative_rect=label_rect, object_id="#developed_lbl",
-            text="Developed by:  Fidel Jesus O. Surtida I",
+            text="Developed by:  2024 © Fidel Jesus O. Surtida I",
             container=self.menu_panel
         )
 
@@ -107,63 +107,99 @@ class Interface:
         This will be called to recreate the leaderboard elements based
         on the saved highscore data file.
         """
-        name_width, stats_width = 150, 80
-        lbl_height = 35
+        # Create the panel list to save the references
+        self.entry_panels = []
+        # Create the medal icons
+        medals = [
+            self.icons.subsurface(1, 117, 27, 27),
+            self.icons.subsurface(35, 119, 27, 28),
+            self.icons.subsurface(63, 118, 27, 27)
+        ]
+        # UI measurement variables
+        name_width, stats_width, rank_width = 150, 80, 50
+        entry_y, lbl_height = hlbitem - 3, 35
+        # Sample data to be displayed in the top 3
+        data = {
+            1: {"name": "DivineKaiser", "score": 12345,
+                "lifetime": 7777, "stretch": 123},
+            2: {"name": "HeraLithea", "score": 12345,
+                "lifetime": 3333, "stretch": 456},
+            3: None
+        }
 
-        # Create the leaderboard entry panel container
-        self.entry_panel = pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(3, hlbitem, item_width, hlbitem),
-            starting_height=1, manager=self.manager,
-            container=self.leaderboard_panel, object_id="@entry_panel"
-        )
-        # Create the player name label
-        name_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(95, 0, name_width, lbl_height),
-            text="Player Name", container=self.entry_panel,
-            object_id="@entry_labels"
-        )
-        # Create the score icon image
-        x = name_label.relative_rect.right + 30
-        score_img = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect(x, 5, 25, 23),
-            image_surface=self.icons.subsurface((157, 1, 30, 28)),
-            container=self.entry_panel
-        )
-        # Create the score label
-        x = score_img.relative_rect.right + 10
-        score_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
-            text="99999", container=self.entry_panel,
-            object_id="@entry_num_labels"
-        )
-        # Create the lifetime icon image
-        x = score_label.relative_rect.right + 20
-        lifetime_img = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect(x, 3, 23, 27),
-            image_surface=self.icons.subsurface((159, 31, 26, 31)),
-            container=self.entry_panel
-        )
-        # Create the lifetime label
-        x = lifetime_img.relative_rect.right + 10
-        lifetime_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
-            text="9999s", container=self.entry_panel,
-            object_id="@entry_num_labels"
-        )
-        # Create the stretch icon image
-        x = lifetime_label.relative_rect.right + 20
-        stretch_img = pygame_gui.elements.UIImage(
-            relative_rect=pygame.Rect(x, 3, 23, 27),
-            image_surface=self.icons.subsurface((65, 0, 55, 55)),
-            container=self.entry_panel
-        )
-        # Create the stretch label
-        x = stretch_img.relative_rect.right + 10
-        stretch_label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
-            text="999m", container=self.entry_panel,
-            object_id="@entry_num_labels"
-        )
+        for rank, player in data.items():
+            # Create the leaderboard entry panel container
+            entry_panel = pygame_gui.elements.UIPanel(
+                relative_rect=pygame.Rect(3, entry_y, item_width, hlbitem),
+                starting_height=1, manager=self.manager,
+                container=self.leaderboard_panel, object_id="@entry_panel"
+            )
+            # Create the medal image
+            pygame_gui.elements.UIImage(
+                relative_rect=pygame.Rect(15, 5, 25, 25),
+                image_surface=medals[rank-1], container=entry_panel
+            )
+            # Create the position label
+            pygame_gui.elements.UILabel(
+                relative_rect=pygame.Rect(35, 0, rank_width, lbl_height),
+                text=f"{rank}", container=entry_panel,
+                object_id="@rank_labels"
+            )
+            # Create the player name label
+            player_name = player["name"] if player else "-----"
+            name_label = pygame_gui.elements.UILabel(
+                relative_rect=pygame.Rect(95, 0, name_width, lbl_height),
+                text=player_name, container=entry_panel,
+                object_id="@entry_labels"
+            )
+            # Create the score icon image
+            x = name_label.relative_rect.right + 30
+            score_img = pygame_gui.elements.UIImage(
+                relative_rect=pygame.Rect(x, 5, 25, 23),
+                image_surface=self.icons.subsurface((157, 1, 30, 28)),
+                container=entry_panel
+            )
+            # Create the score label
+            x = score_img.relative_rect.right + 10
+            player_score = player["score"] if player else "-----"
+            score_label = pygame_gui.elements.UILabel(
+                relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
+                text=f"{player_score}", container=entry_panel,
+                object_id="@entry_num_labels"
+            )
+            # Create the lifetime icon image
+            x = score_label.relative_rect.right + 20
+            lifetime_img = pygame_gui.elements.UIImage(
+                relative_rect=pygame.Rect(x, 3, 23, 27),
+                image_surface=self.icons.subsurface((159, 31, 26, 31)),
+                container=entry_panel
+            )
+            # Create the lifetime label
+            x = lifetime_img.relative_rect.right + 10
+            player_lifetime = f"{player["lifetime"]}s" if player else "-----"
+            lifetime_label = pygame_gui.elements.UILabel(
+                relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
+                text=player_lifetime, container=entry_panel,
+                object_id="@entry_num_labels"
+            )
+            # Create the stretch icon image
+            x = lifetime_label.relative_rect.right + 20
+            stretch_img = pygame_gui.elements.UIImage(
+                relative_rect=pygame.Rect(x, 3, 23, 27),
+                image_surface=self.icons.subsurface((65, 0, 55, 55)),
+                container=entry_panel
+            )
+            # Create the stretch label
+            x = stretch_img.relative_rect.right + 10
+            player_stretch = f"{player["stretch"]}m" if player else "-----"
+            stretch_label = pygame_gui.elements.UILabel(
+                relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
+                text=player_stretch, container=entry_panel,
+                object_id="@entry_num_labels"
+            )
+            # append the entry panel and update the y coordinate
+            self.entry_panels.append(entry_panel)
+            entry_y += hlbitem - 5
 
     def _initialize_gameover_elements(self):
         """

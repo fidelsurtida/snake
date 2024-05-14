@@ -104,7 +104,7 @@ class Particle:
             # Decrease the size if the animation type is default
             if self.animation == Particle.TYPE.DEFAULT:
                 size = int(self.size * (self._lifetimer / self.lifetime))
-                size = self.size - size
+                size = max(0, self.size - size)
             # Else if its floating, update the alpha to invisible
             elif (self.animation == Particle.TYPE.FLOATING or
                   self.animation == Particle.TYPE.FALLING):

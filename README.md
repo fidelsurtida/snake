@@ -38,8 +38,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgements
 
+- Snake Sprite Sheet downloaded from [OpenGameArt](https://opengameart.org/content/snake-sprite-sheet)
 - Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
+- Speedup Shoes and Snail Sprites downloaded from [Freepik](https://www.freepik.com/)
 - Button Icons and Particles downloaded from [Freepik](https://www.freepik.com/)
+- All fonts used are free license from [Dafont](https://www.dafont.com)
 
 ## Support
 
@@ -144,6 +147,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed snake head sprite detached on died state. Fixed item adding of score and balancing of spawn times.
 - May 10, 2024
   - Added partial UI Design for the Top 3 Leaderboard in the menu screen.
+- May 14, 2024
+  - Finished UI Design codes for the Top 3 Leaderboard in menu screen. Updated Designed by label.
 
 <br>
 <b>This project is currently under development.</b>

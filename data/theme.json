@@ -388,7 +388,7 @@
       "prototype": "#mont_font",
       "colours":
       {
-         "normal_text": "#eee"
+         "normal_text": "#bbb"
       },
       "font":
       {
@@ -397,6 +397,19 @@
       "misc":
       {
          "text_horiz_alignment": "left"
+      }
+   },
+
+   "@rank_labels":
+   {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "normal_text": "#fff"
+      },
+      "font":
+      {
+         "size": "24"
       }
    },
 
