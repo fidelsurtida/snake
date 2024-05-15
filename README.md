@@ -149,6 +149,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added partial UI Design for the Top 3 Leaderboard in the menu screen.
 - May 14, 2024
   - Finished UI Design codes for the Top 3 Leaderboard in menu screen. Updated Designed by label.
+- May 15, 2024
+  - Updated Slowdown Debuff to spawn near the snake head within a specified range on current direction.
 
 <br>
 <b>This project is currently under development.</b>

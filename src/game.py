@@ -148,7 +148,7 @@ class Game:
             self.speedup = SpeedUp(name="speedup", filename="speedup.png",
                                    points=20, value=5, negative=False)
             self.slowdown = SlowDown(name="slowdown", filename="snail.png",
-                                     points=50, value=2, negative=True)
+                                     points=10, value=2, negative=True)
 
         def all_territories():
             return ([self.apple.territory, self.golden_apple.territory,
@@ -215,7 +215,9 @@ class Game:
                 if event.type == SpeedUp.SPAWN_SPEED_UP_EVENT:
                     self.speedup.spawn(off_limits_rects=all_territories())
                 if event.type == SlowDown.SPAWN_SLOW_DOWN_EVENT:
-                    self.slowdown.spawn(off_limits_rects=all_territories())
+                    territory = all_territories()
+                    self.slowdown.spawn_near_head(head=self.snake.head,
+                                                  off_limits_rects=territory)
 
         return True
 
