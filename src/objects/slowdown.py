@@ -58,7 +58,7 @@ class SlowDown(FoodBuff):
         """
         # Ready the required variables for location generation
         min_x, min_y = 40, 50
-        area_x, area_y = 60, 60
+        area_x, area_y = 65, 65
         head_x, head_y = head.rect.topleft
         window_bounds = pygame.Rect(50, 60, self._swidth - min_x * 2,
                                     self._sheight - min_y * 2)

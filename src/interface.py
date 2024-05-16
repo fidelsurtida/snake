@@ -127,6 +127,7 @@ class Interface:
             3: None
         }
 
+        # Loop throught the data and create each an entry item UI
         for rank, player in data.items():
             # Create the leaderboard entry panel container
             entry_panel = pygame_gui.elements.UIPanel(
@@ -192,7 +193,7 @@ class Interface:
             # Create the stretch label
             x = stretch_img.relative_rect.right + 10
             player_stretch = f"{player["stretch"]}m" if player else "-----"
-            stretch_label = pygame_gui.elements.UILabel(
+            pygame_gui.elements.UILabel(
                 relative_rect=pygame.Rect(x, 0, stats_width, lbl_height),
                 text=player_stretch, container=entry_panel,
                 object_id="@entry_num_labels"

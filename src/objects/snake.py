@@ -238,11 +238,10 @@ class Snake:
                 existing = [c for c in self.covers if c.rect == cover_rect]
                 # If future_bounds is not found in current covers, create one
                 if not existing:
-                    bg_cover = self.bg.subsurface(cover_rect)
                     turn_cover = get_cover(first, second)
                     if turn_cover:
                         self.covers.append(SnakeCover(cover_rect, turn_cover,
-                                                      bg_cover))
+                                           self.bg, second.direction))
                 else:
                     # If it exists, reset the delay counter
                     existing[0].reset_delay()
@@ -398,7 +397,7 @@ class SnakePart(Sprite):
         """ Draw this individual part to the screen. """
         screen.blit(self.image, self.rect)
 
-    def teleport(self, x, y, *, corner="topleft", reset=False):
+    def teleport(self, x, y, *, corner="topleft"):
         """ Teleports the position of this snake part. """
         match corner:
             case "topleft": self.rect.topleft = (x, y)
@@ -463,20 +462,29 @@ class SnakePart(Sprite):
 
 class SnakeCover:
 
-    def __init__(self, cover_rect, turn_cover, bg_cover=None):
+    def __init__(self, cover_rect, turn_cover, background=None, direction=None):
         """
         Initializes a SnakeCover object to cover the turning snake parts.
         It has a delay counter that determines the lifetime of the cover.
         """
         self._turn_cover = turn_cover
-        self._bg_cover = bg_cover
         self.rect = cover_rect
-        self.delay = 0.05
+        self.bg_rect = cover_rect.copy()
+        self.delay = 0.07
+        # Create a new rect for the bgcover to adjust and subsurface it to bg
+        adjustment = direction / Snake.SPEED * 7
+        match direction:
+            case Snake.DOWN | Snake.RIGHT:
+                self.bg_rect.size += adjustment
+            case Snake.UP | Snake.LEFT:
+                self.bg_rect.topleft += adjustment
+                self.bg_rect.size -= adjustment
+        self._bg_cover = background.subsurface(self.bg_rect)
 
     def draw(self, screen):
         """ Draw first the bg_cover then next is the turn_cover. """
         if self._bg_cover:
-            screen.blit(self._bg_cover, self.rect)
+            screen.blit(self._bg_cover, self.bg_rect)
         screen.blit(self._turn_cover, self.rect)
 
     def update(self, time_delta):
@@ -486,4 +494,4 @@ class SnakeCover:
 
     def reset_delay(self):
         """ Resets the delay counter to its initial value. """
-        self.delay = 0.05
+        self.delay = 0.07
