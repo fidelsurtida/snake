@@ -58,7 +58,8 @@ class Game:
 
     def _load_game_backgrounds(self):
         """ Loads the background image and the walls on each window. """
-        self.bg = pygame.image.load(Config.assets_path("background.png"))
+        raw_bg = pygame.image.load(Config.assets_path("background.png"))
+        self.bg = pygame.transform.scale(raw_bg, (self.WIDTH, self.HEIGHT))
         panel = pygame.image.load(Config.assets_path("panel.png"))
         # Get only a part of the panel background to make as a wall
         self.wall_top = panel.subsurface(0, 25, 994, 25)
@@ -71,7 +72,7 @@ class Game:
         self.bgwalled.blit(self.wall_left, (0, 0))
         self.bgwalled.blit(self.wall_right, (self.WIDTH - 25, 0))
         self.bgwalled.blit(self.wall_top, (15, 0))
-        self.bgwalled.blit(self.wall_bottom, (15, self.HEIGHT - 25))
+        self.bgwalled.blit(self.wall_bottom, (15, self.HEIGHT - 22))
 
     def reset_game(self):
         """
@@ -231,7 +232,7 @@ class Game:
         self.screen.blit(self.wall_left, (0, 0))
         self.screen.blit(self.wall_right, (self.WIDTH - 25, 0))
         self.screen.blit(self.wall_top, (15, 0))
-        self.screen.blit(self.wall_bottom, (15, self.HEIGHT - 25))
+        self.screen.blit(self.wall_bottom, (15, self.HEIGHT - 22))
 
         # Draw the game objects
         self.snake.draw(self.screen)

@@ -153,6 +153,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Updated Slowdown Debuff to spawn near the snake head within a specified range on current direction.
 - May 16, 2024
   - Fixed Turn BG Covers to hide the excess moving body parts when changing snake speeds.
+  - Adjusted Window Height size to correct the snake bounderies on bottom and top when turning.
 
 <br>
 <b>This project is currently under development.</b>
