@@ -154,6 +154,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - May 16, 2024
   - Fixed Turn BG Covers to hide the excess moving body parts when changing snake speeds.
   - Adjusted Window Height size to correct the snake bounderies on bottom and top when turning.
+- May 20, 2024
+  - Added Textbox in game over screen to track the player name.
 
 <br>
 <b>This project is currently under development.</b>

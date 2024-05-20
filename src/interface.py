@@ -38,6 +38,8 @@ class Interface:
         self._initialize_gameover_elements()
         # Container for tracking all the floaters that will be spawned
         self._floaters = []
+        # Create a name flag for saving the player name
+        self._saved_name = None
 
     def _initialize_menu_elements(self):
         """
@@ -247,12 +249,12 @@ class Interface:
             image_surface=self.icons.subsurface((125, 25, 30, 32)),
             container=self.results_panel
         )
-        # Create the player name label (real player name goes here)
+        # Create the player name textbox for the player to enter his/her name
         top_left = player_lbl.relative_rect.bottomleft
-        self._results_player_lbl = pygame_gui.elements.UILabel(
+        self._results_player_name = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect(*top_left, res_col, 30),
-            container=self.results_panel, object_id="#results_player_lbl",
-            text="DivineKaiser"
+            container=self.results_panel, object_id="#results_player_textbox",
+            placeholder_text="Enter Name Here..."
         )
         # Create the stretch icon beside the label
         stretch_icon = pygame_gui.elements.UIImage(
@@ -446,6 +448,9 @@ class Interface:
         self.update_score(0)
         self.update_lifetime(100)
         self.update_stretch(0)
+        # Reset the saved player names
+        self._saved_name = None
+        self._results_player_name.set_text("")
 
     def start_game_event(self):
         """ Sets the gamestate and hides the menu panel. """
@@ -461,11 +466,16 @@ class Interface:
         self.update_score(0)
         self.update_lifetime(100)
         self.update_stretch(0)
+        # Save the player name
+        self._saved_name = self._results_player_name.get_text() or "PLAYER"
 
     def gameover_event(self):
         """ Sets the gamestate and shows the gameover panel. """
         self.state = GAMESTATE.GAMEOVER
         self.gameover_panel.show()
+        # If there is a saved player name then replace it to the textbox
+        if self._saved_name:
+            self._results_player_name.set_text(self._saved_name)
 
     def spawn_regen_label(self, position, regen, points):
         """ Spawns a label that shows the regen stat after eating food. """
@@ -503,13 +513,16 @@ class Interface:
         """ Updates the stretch label with current length of the snake. """
         self._stretch_lbl.set_text(f"STRETCH: {stretch}m")
 
-    def update_results_data(self, *, player="DivineKaiser", score="0",
+    def update_results_data(self, *, score="0",
                             stretch="0", lifetime="0"):
         """ Updates the results panel with the final game data. """
-        self._results_player_lbl.set_text(player)
         self._results_stretch_lbl.set_text(f"STRETCH:  {stretch}m")
         self._results_lifetime_lbl.set_text(f"LIFETIME:  {lifetime:.0f}s")
         self._results_score_lbl.set_text(f"{score}")
+
+    def get_player_name(self):
+        """ Gets the player name in the gameover player textbox. """
+        return self._results_player_name.get_text()
 
     def update_moments_image(self, image):
         """ Updates the last moments image with the given image. """

@@ -312,12 +312,13 @@
       }
    },
 
-   "#results_player_lbl":
+   "#results_player_textbox":
    {
       "prototype": "#player_lbl",
       "colours":
       {
-         "dark_bg": "rgba(0, 0, 0, 0)"
+         "dark_bg": "rgba(225, 225, 225, 10)",
+         "normal_text": "#ddd"
       }
    },
 
