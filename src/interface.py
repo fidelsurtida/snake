@@ -46,7 +46,7 @@ class Interface:
         Creates the GUI for the MENU state of the game.
         """
         wtitle, htitle = self._WIDTH - 300, 100
-        lb_width, lb_height, item_width = wtitle - 20, 165, wtitle - 40
+        lb_width, lb_height = wtitle - 20, 165
         bwidth, bheight = 230, 70
         margin_y, hlbitem = 13, 40
         xtitle, ytitle = ((self._WIDTH - wtitle) / 2,
@@ -79,7 +79,8 @@ class Interface:
         )
 
         # Create the leaderboard items. Call the helper method
-        self._initialize_leaderboard_items(item_width, hlbitem)
+        data = [None, None, None]
+        self._initialize_leaderboard_items(data)
 
         # Create the Start Button of the Menu
         lb_y = self.leaderboard_panel.rect.bottom
@@ -104,7 +105,7 @@ class Interface:
             container=self.menu_panel
         )
 
-    def _initialize_leaderboard_items(self, item_width, hlbitem):
+    def _initialize_leaderboard_items(self, data):
         """
         This will be called to recreate the leaderboard elements based
         on the saved highscore data file.
@@ -118,19 +119,12 @@ class Interface:
             self.icons.subsurface(63, 118, 27, 27)
         ]
         # UI measurement variables
+        item_width, hlbitem = self._WIDTH - 340, 40
         name_width, stats_width, rank_width = 150, 80, 50
         entry_y, lbl_height = hlbitem - 3, 35
-        # Sample data to be displayed in the top 3
-        data = {
-            1: {"name": "DivineKaiser", "score": 12345,
-                "lifetime": 7777, "stretch": 123},
-            2: {"name": "HeraLithea", "score": 12345,
-                "lifetime": 3333, "stretch": 456},
-            3: None
-        }
 
         # Loop throught the data and create each an entry item UI
-        for rank, player in data.items():
+        for rank, player in enumerate(data, start=1):
             # Create the leaderboard entry panel container
             entry_panel = pygame_gui.elements.UIPanel(
                 relative_rect=pygame.Rect(3, entry_y, item_width, hlbitem),
@@ -522,7 +516,16 @@ class Interface:
 
     def get_player_name(self):
         """ Gets the player name in the gameover player textbox. """
-        return self._results_player_name.get_text()
+        return self._results_player_name.get_text() or "PLAYER"
+
+    def update_leaderboard_data(self, data):
+        """ This will remove the current LB UI and recreate it from data. """
+        # Clear each panel first
+        for panel in self.entry_panels:
+            panel.kill()
+        # Reinitialize the Leaderboard UI
+        data = data if data else [None, None, None]
+        self._initialize_leaderboard_items(data)
 
     def update_moments_image(self, image):
         """ Updates the last moments image with the given image. """

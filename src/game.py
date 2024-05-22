@@ -12,6 +12,7 @@ Author: Fidel Jesus O. Surtida I
 import pygame
 import pygame_gui
 import random
+import marshal
 from interface import Interface
 from src.config import Config
 from src.config import GAMESTATE
@@ -55,6 +56,14 @@ class Game:
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
+        # Create the empty list of leaderboard entries
+        self.lb_data = []
+        # Load the leaderboard data if it's available in data folder
+        lb_path = Config.BASE_PATH / "data/leaderboard.bin"
+        if lb_path.exists():
+            self.lb_data = marshal.loads(lb_path.read_bytes())
+        # Initialize the leaderboard GUI
+        self.interface.update_leaderboard_data(self.lb_data[:3])
 
     def _load_game_backgrounds(self):
         """ Loads the background image and the walls on each window. """
@@ -190,6 +199,9 @@ class Game:
 
                 # RESTART BUTTON EVENT
                 elif event.ui_element == self.interface.restart_btn:
+                    # Perform saving of leaderboard data
+                    self.update_leaderboard_data()
+                    # Prepare for restart of gameplay
                     self.state = GAMESTATE.PLAY
                     self.interface.restart_game_event()
                     self.reset_game()
@@ -200,6 +212,9 @@ class Game:
 
                 # QUIT BUTTON EVENT
                 elif event.ui_element == self.interface.quit_btn:
+                    # Perform saving of leaderboard data
+                    self.update_leaderboard_data()
+                    # Prepare for quitting of gameplay
                     self.state = GAMESTATE.MENU
                     self.interface.main_menu_event()
                     self.reset_game()
@@ -374,3 +389,24 @@ class Game:
             self.interface.update_results_data(score=self.score,
                                                stretch=self.snake.stretch,
                                                lifetime=self.total_time)
+
+    def update_leaderboard_data(self):
+        """
+        This method will add a new leaderboard data and sort it by descending
+        order of scores to show the top 3 in the leaderboard UI.
+        The data that it will get will be the current status of the game.
+        """
+        # Get the current game stats
+        data = {"name": self.interface.get_player_name(),
+                "score": self.score, "stretch": self.snake.stretch,
+                "lifetime": int(self.total_time)}
+        # Append it to current lb_data variable
+        self.lb_data.append(data)
+        # Sort it by score
+        self.lb_data.sort(key=lambda x: x["score"], reverse=True)
+        # Pass the top 3 to the interface leaderboard UI generator
+        self.interface.update_leaderboard_data(self.lb_data[:3])
+        # Parse the leaderboard data to json and save it in file
+        byte_data = marshal.dumps(self.lb_data)
+        save_path = Config.BASE_PATH / "data/leaderboard.bin"
+        save_path.write_bytes(byte_data)

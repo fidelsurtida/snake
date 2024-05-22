@@ -156,6 +156,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Adjusted Window Height size to correct the snake bounderies on bottom and top when turning.
 - May 20, 2024
   - Added Textbox in game over screen to track the player name.
+- May 22, 2024
+  - Implemented Saving of leaderboard into binary file at leaderboard.bin. Loading of LB data into the Menu GUI.
 
 <br>
 <b>This project is currently under development.</b>
