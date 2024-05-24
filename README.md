@@ -161,6 +161,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Implemented Saving of leaderboard into binary file at leaderboard.bin. Loading of LB data into the Menu GUI.
 - May 24, 2024
   - Added partial implementation of bomb object with bomb image and basic spawn and despawn code.
+  - Added scale up effect when spawning and shrink effect when near the end of lifetime of the bomb.
 
 <br>
 <b>This project is currently under development.</b>
