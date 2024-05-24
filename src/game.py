@@ -21,6 +21,7 @@ from src.objects.food import Food
 from src.objects.foodbuff import FoodBuff
 from src.objects.speedup import SpeedUp
 from src.objects.slowdown import SlowDown
+from src.objects.bomb import Bomb
 
 
 class Game:
@@ -53,6 +54,10 @@ class Game:
         self.speedup = None
         # Create the debuff items (creation at play button press)
         self.slowdown = None
+        # Create and initialize the bombs based on config count
+        self.bombs = []
+        for _ in range(Config.BOMB_COUNT):
+            self.bombs.append(Bomb(damage=10, deduction=100))
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
@@ -133,6 +138,10 @@ class Game:
             self.speedup.update(time_delta)
             # Update the debuff items for animation states
             self.slowdown.update(time_delta)
+
+            # Update the instantiated bombs on PLAY States
+            for bomb in self.bombs:
+                bomb.update(time_delta)
 
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
@@ -249,14 +258,17 @@ class Game:
         self.screen.blit(self.wall_top, (15, 0))
         self.screen.blit(self.wall_bottom, (15, self.HEIGHT - 22))
 
-        # Draw the game objects
+        # Draw the snake which is available in any MODE
         self.snake.draw(self.screen)
+
         # Draw game objects that are only viewable in PLAY mode
         if self.state == GAMESTATE.PLAY:
             self.apple.draw(self.screen)
             self.golden_apple.draw(self.screen)
             self.speedup.draw(self.screen)
             self.slowdown.draw(self.screen)
+            for bomb in self.bombs:
+                bomb.draw(self.screen)
 
         # Draw the GUI elements from Inteface
         self.interface.draw()

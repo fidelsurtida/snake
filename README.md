@@ -41,6 +41,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - Snake Sprite Sheet downloaded from [OpenGameArt](https://opengameart.org/content/snake-sprite-sheet)
 - Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
 - Speedup Shoes and Snail Sprites downloaded from [Freepik](https://www.freepik.com/)
+- Bomb Sprite and Explosion Particles from [Freepik](https://www.freepik.com/)
 - Button Icons and Particles downloaded from [Freepik](https://www.freepik.com/)
 - All fonts used are free license from [Dafont](https://www.dafont.com)
 
@@ -158,6 +159,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added Textbox in game over screen to track the player name.
 - May 22, 2024
   - Implemented Saving of leaderboard into binary file at leaderboard.bin. Loading of LB data into the Menu GUI.
+- May 24, 2024
+  - Added partial implementation of bomb object with bomb image and basic spawn and despawn code.
 
 <br>
 <b>This project is currently under development.</b>

@@ -54,6 +54,13 @@ class Config:
     SLOWDOWN_MIN_DELAY = 2000
     SLOWDOWN_MAX_DELAY = 5000
 
+    # BOMB CONSTANTS
+    BOMB_COUNT = 10
+    BOMB_SIZE = 45
+    BOMB_LIFETIME = 5
+    BOMB_MIN_SPAWN_DELAY = 3
+    BOMB_MAX_SPAWN_DELAY = 15
+
     # BASE PATH
     BASE_PATH = Path(__file__).resolve().parent.parent
 
