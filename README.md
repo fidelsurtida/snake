@@ -162,6 +162,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - May 24, 2024
   - Added partial implementation of bomb object with bomb image and basic spawn and despawn code.
   - Added scale up effect when spawning and shrink effect when near the end of lifetime of the bomb.
+- May 29, 2024
+  - Added a spark animation in the bomb placed on the rope.
 
 <br>
 <b>This project is currently under development.</b>
