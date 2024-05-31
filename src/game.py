@@ -57,7 +57,7 @@ class Game:
         # Create and initialize the bombs based on config count
         self.bombs = []
         for _ in range(Config.BOMB_COUNT):
-            self.bombs.append(Bomb(damage=10, deduction=100))
+            self.bombs.append(Bomb(damage=10, deduction=100, snake=self.snake))
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0

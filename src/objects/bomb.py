@@ -26,11 +26,12 @@ class Bomb(Sprite):
     SPAWN_DELAY_MAX = Config.BOMB_MAX_SPAWN_DELAY
     SCALE_TIME = 0.5
 
-    def __init__(self, *, damage, deduction):
+    def __init__(self, *, damage, deduction, snake):
         """
         Initializes the bomb image as sprite and starts the countdown of
         the delay timer to spawn the bomb. Initialize also the counters
-        for lifetime and scale timers.
+        for lifetime and scale timers. This also has a reference from the
+        snake to prevent spawns near the snake body.
         """
         super().__init__()
         self._img = pygame.image.load(Config.assets_path("bomb.png"))
@@ -38,6 +39,7 @@ class Bomb(Sprite):
         self.spawned = False
         self.damage = damage
         self.deduction = deduction
+        self._snake = snake
         self._spawn_delay = self._generate_spawn_delay()
         self._lifetime = self.LIFETIME
         self._swidth = Config.SCREEN_WIDTH
@@ -65,11 +67,20 @@ class Bomb(Sprite):
     def _spawn_bomb(self):
         """
         Spawns the bomb object in a random position based on screen
-        dimensions and the passed off limits object territories.
+        dimensions and the passed snake object as off limits.
         """
-        x = random.randint(self.SIZE, self._swidth - self.SIZE * 2)
-        y = random.randint(self.SIZE + 50, self._sheight - self.SIZE * 2)
-        rect = pygame.Rect(x + self.SIZE // 2, y + self.SIZE // 2, 0, 0)
+        # Loop until a valid position is generated
+        while True:
+            x = random.randint(self.SIZE, self._swidth - self.SIZE * 2)
+            y = random.randint(self.SIZE + 50, self._sheight - self.SIZE * 2)
+            rect = pygame.Rect(x + self.SIZE // 2, y + self.SIZE // 2, 0, 0)
+            collide_rect = pygame.Rect(x, y, self.SIZE, self.SIZE)
+            for part_rect in self._snake.rects:
+                if part_rect.colliderect(collide_rect):
+                    break
+            else:
+                break
+
         # Initialize the final valid position of this bomb object
         # Save the start position and end position in reference for scaling
         self._sposition = pygame.Vector2(rect.x, rect.y)
@@ -88,6 +99,7 @@ class Bomb(Sprite):
                 self._spawn_bomb()
 
         # Else if spawned then reduce the lifetime
+        # Also update the snake rects reference
         if self.spawned:
             self._lifetime = max(0, self._lifetime - time_delta)
             self._spark_show = True

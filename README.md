@@ -164,6 +164,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added scale up effect when spawning and shrink effect when near the end of lifetime of the bomb.
 - May 29, 2024
   - Added a spark animation in the bomb placed on the rope.
+- May 31, 2024
+  - Fixed spark sprite design and applied code for bomb to spawn where no snake body exists.
 
 <br>
 <b>This project is currently under development.</b>
