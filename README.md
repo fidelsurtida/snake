@@ -168,6 +168,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed spark sprite design and applied code for bomb to spawn where no snake body exists.
 - June 3, 2024
   - Implemented collision to bombs and display of negative health and score floater.
+  - Fixes for the gameover screen execution and removed effects and floaters in the deathcam image.
 
 <br>
 <b>This project is currently under development.</b>

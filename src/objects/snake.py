@@ -208,7 +208,7 @@ class Snake:
         self.head.draw(screen)
 
         # Draw the Buff Icon if there is a buff applied
-        if self.buff_icon:
+        if not self.dead and self.buff_icon:
             screen.blit(self.buff_icon, self._buff_rect)
 
     def _create_turn_covers(self):

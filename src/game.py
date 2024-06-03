@@ -43,7 +43,8 @@ class Game:
         self._load_game_backgrounds()
         # These variables are used for various flags regarding the snake
         self._auto_path_counter = 0
-        self._gameover_counter = 0.12
+        self._gameover_counter = 0.15
+        self._interface_gameover_delay = 0.2
         self._uturn = None
         # Create the Snake object as the player and pass the game background
         self.snake = Snake(background=self.bgwalled)
@@ -94,7 +95,8 @@ class Game:
         All variables that needs to return to initial value should be put here.
         """
         self.snake = Snake(background=self.bgwalled)
-        self._gameover_counter = 0.12
+        self._gameover_counter = 0.15
+        self._interface_gameover_delay = 0.2
         self._auto_path_counter = 0
         self._uturn = False
         self.score = 0
@@ -145,6 +147,18 @@ class Game:
             # Update the instantiated bombs on PLAY States
             for bomb in self.bombs:
                 bomb.update(time_delta)
+
+            # Call the gameover event if the counter reaches 0
+            if self._gameover_counter == 0:
+                self.set_gameover_event()
+
+        # HANDLE GAMEOVER EVENTS
+        elif self.state == GAMESTATE.GAMEOVER:
+            if self._interface_gameover_delay > 0:
+                counter = max(0, self._interface_gameover_delay - time_delta)
+                self._interface_gameover_delay = counter
+            elif self._interface_gameover_delay == 0:
+                self.show_gameover_screen()
 
         # UPDATE MOVEMENT OF SNAKE IN MENU AND PLAY STATES
         if self.state == GAMESTATE.MENU or self.state == GAMESTATE.PLAY:
@@ -390,7 +404,9 @@ class Game:
         snake_head = self.snake.head
         if snake_head.bounds.clamp(self.bounderies) != snake_head.bounds:
             self._gameover_counter = 0
-            self.interface.destroy_floaters()
+            # Instant hide the game panel if the collision is on top bounds
+            if self.snake.head.rect.y < 70:
+                self.interface.game_panel.hide()
 
     def snake_collide_self_checker(self, time_delta):
         """
@@ -400,34 +416,49 @@ class Game:
         """
         for body in self.snake.body[1:]:
             if self.snake.head.bounds.colliderect(body.bounds):
-                self._gameover_counter -= time_delta
-                self.interface.destroy_floaters()
+                counter = max(0, self._gameover_counter - time_delta)
+                self._gameover_counter = counter
                 break
 
-        # If the gameover counter reaches zero, then set state to GAMEOVER
-        # We also need to compute the death moment location of the snake
-        # And finally pass the final game data to the results panel
-        if self._gameover_counter <= 0:
-            # Set the game state to GAMEOVER
-            self.state = GAMESTATE.GAMEOVER
-            self.interface.gameover_event()
+    def set_gameover_event(self):
+        """
+        If the gameover counter reaches zero, then set state to GAMEOVER
+        We also need to compute the death moment location of the snake
+        And finally pass the final game data to the results panel
+        """
+        # Set the game state to GAMEOVER
+        self.state = GAMESTATE.GAMEOVER
+        self._gameover_counter = -1
 
-            # Set the dead image sprite of the snake head
-            self.snake.die()
-            self.snake.draw(self.screen)
+        # Remove the floaters
+        self.interface.destroy_floaters()
 
-            # Set the moments image of the snake in the gameover screen
-            width, height, (x, y) = 320, 180, self.snake.head.bounds.topleft
-            snakepos = (x - (width // 3) - 20, y - (height // 3))
-            moments_rect = pygame.Rect(*snakepos, width, height)
-            moments_rect = moments_rect.clamp(self.screen.get_rect())
-            moments = self.screen.subsurface(moments_rect)
-            self.interface.update_moments_image(moments)
+        # Set the dead image sprite of the snake head
+        self.snake.die()
+        self.snake.draw(self.screen)
 
-            # Pass the final game data to the results panel
-            self.interface.update_results_data(score=self.score,
-                                               stretch=self.snake.stretch,
-                                               lifetime=self.total_time)
+        # Pass the final game data to the results panel
+        self.interface.update_results_data(score=self.score,
+                                           stretch=self.snake.stretch,
+                                           lifetime=self.total_time)
+
+    def show_gameover_screen(self):
+        """
+        This will be called after the delay is finished when setting
+        the GAMEOVER flag. This allows the game to update and remove
+        remaining game UI and effects
+        """
+        # Set the moments image of the snake in the gameover screen
+        width, height, (x, y) = 320, 180, self.snake.head.bounds.topleft
+        snakepos = (x - (width // 3) - 20, y - (height // 3))
+        moments_rect = pygame.Rect(*snakepos, width, height)
+        moments_rect = moments_rect.clamp(self.screen.get_rect())
+        moments = self.screen.subsurface(moments_rect)
+        self.interface.update_moments_image(moments)
+
+        # Finally set the interface to gameover
+        self._interface_gameover_delay = -1
+        self.interface.gameover_event()
 
     def update_leaderboard_data(self):
         """
