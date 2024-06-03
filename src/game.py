@@ -57,7 +57,7 @@ class Game:
         # Create and initialize the bombs based on config count
         self.bombs = []
         for _ in range(Config.BOMB_COUNT):
-            self.bombs.append(Bomb(damage=10, deduction=100, snake=self.snake))
+            self.bombs.append(Bomb(damage=10, deduction=50, snake=self.snake))
         # Score and total time of the current game
         self.score = 0
         self.total_time = 0
@@ -124,6 +124,9 @@ class Game:
             # Update the snake if it collides with the items and eats it
             self.snake_eat_items_update(self.speedup)
             self.snake_eat_items_update(self.slowdown)
+
+            # Update the snake if it collides with the bombs
+            self.snake_collide_bombs_update()
 
             # Update the food objects for its animation states
             self.apple.update(time_delta)
@@ -355,6 +358,28 @@ class Game:
                 # Destroy the item
                 item.destroy()
 
+    def snake_collide_bombs_update(self):
+        """
+        Checks for the collision of bombs into the head of the snake.
+        If it collides then reduce the health and score of the player,
+        also trigger the explosion of the bomb and show the negative red
+        floater object for the bomb.
+        """
+        for bomb in self.bombs:
+            if bomb.spawned and self.snake.head.bounds.colliderect(bomb.bounds):
+                # Display a buff icon and points floater
+                item_pos = pygame.Vector2(bomb.bounds.topleft)
+                self.interface.spawn_bomb_label(position=item_pos,
+                                                damage=bomb.damage,
+                                                deduction=bomb.deduction)
+                # Reduce the score and health then update the labels
+                self.score = max(0, self.score - bomb.deduction)
+                self.snake.lifetime = max(0, self.snake.lifetime - bomb.damage)
+                self.interface.update_score(self.score)
+                # Destroy the bomb to respawn it again
+                bomb.destroy()
+                break
+
     def snake_bump_bounderies_update(self):
         """
         Check if each head part collides with window bounderies
@@ -365,6 +390,7 @@ class Game:
         snake_head = self.snake.head
         if snake_head.bounds.clamp(self.bounderies) != snake_head.bounds:
             self._gameover_counter = 0
+            self.interface.destroy_floaters()
 
     def snake_collide_self_checker(self, time_delta):
         """
@@ -375,6 +401,7 @@ class Game:
         for body in self.snake.body[1:]:
             if self.snake.head.bounds.colliderect(body.bounds):
                 self._gameover_counter -= time_delta
+                self.interface.destroy_floaters()
                 break
 
         # If the gameover counter reaches zero, then set state to GAMEOVER

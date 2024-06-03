@@ -495,6 +495,23 @@ class Interface:
         self._floaters.append(buff_float)
         self._floaters.append(point_floater)
 
+    def spawn_bomb_label(self, position, damage, deduction):
+        """ Spawns a floating label that shows bomb damage and reductions. """
+        floater = Floater(name="damage", position=position - (37, 0),
+                          dimension=(50, 30), text=f"-{damage}",
+                          icon=self.heart_icon, isize=25)
+        point_floater = Floater(name="deduction", position=position + (40, 0),
+                                dimension=(45, 30), text=f"{deduction}",
+                                icon=self.score_icon, isize=25)
+        self._floaters.append(floater)
+        self._floaters.append(point_floater)
+
+    def destroy_floaters(self):
+        """ Removes all existing floaters in the draw pipeline. """
+        for floater in self._floaters:
+            floater.destroy()
+        self._floaters = []
+
     def update_score(self, score):
         """ Updates the score label with current score of the game. """
         self._score_lbl.set_text(f"SCORE: {score}")

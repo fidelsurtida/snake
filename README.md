@@ -166,6 +166,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Added a spark animation in the bomb placed on the rope.
 - May 31, 2024
   - Fixed spark sprite design and applied code for bomb to spawn where no snake body exists.
+- June 3, 2024
+  - Implemented collision to bombs and display of negative health and score floater.
 
 <br>
 <b>This project is currently under development.</b>

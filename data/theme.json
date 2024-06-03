@@ -214,6 +214,26 @@
       }
    },
 
+   "@damage_lbl":
+   {
+      "prototype": "@regen_lbl",
+      "colours":
+      {
+         "normal_text": "#FB6969",
+         "text_shadow": "#BA2727"
+      }
+   },
+
+   "@deduction_lbl":
+   {
+      "prototype": "@regen_lbl",
+      "colours":
+      {
+         "normal_text": "#FB6969",
+         "text_shadow": "#BA2727"
+      }
+   },
+
    "@points_lbl":
    {
       "prototype": "@regen_lbl",

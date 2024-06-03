@@ -147,3 +147,18 @@ class Bomb(Sprite):
                 rspark = pygame.Rect(pygame.Vector2(30, -6) + self.rect.topleft,
                                      (self.SPARK_SIZE, self.SPARK_SIZE))
                 screen.blit(self._spark_imgs[self._spark_index], rspark)
+
+    @property
+    def bounds(self):
+        """ Returns the reduced Rect object of the Food. """
+        rect = self.rect.copy()
+        adjustment = self.SIZE // 4
+        rect.topleft = (rect.x + adjustment, rect.y + adjustment)
+        rect.size = (rect.width - adjustment * 2, rect.height - adjustment * 2)
+        return rect
+
+    def destroy(self):
+        """ Removes the bomb and let it respawn again. """
+        self.spawned = False
+        self._lifetime = 0
+        self._spawn_delay = self._generate_spawn_delay()
