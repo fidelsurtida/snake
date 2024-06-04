@@ -433,6 +433,10 @@ class Game:
         # Remove the floaters
         self.interface.destroy_floaters()
 
+        # Destroy all bombs
+        for bomb in self.bombs:
+            bomb.reset()
+
         # Set the dead image sprite of the snake head
         self.snake.die()
         self.snake.draw(self.screen)

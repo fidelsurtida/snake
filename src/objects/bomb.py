@@ -199,3 +199,15 @@ class Bomb(Sprite):
         self.exploding = True
         self._lifetime = 0
         self._spawn_delay = self._generate_spawn_delay()
+
+    def reset(self):
+        """ Reset the bomb to it's initial state. """
+        self.spawned = False
+        self.exploding = False
+        self._lifetime = 0
+        self._explosion_index = 0
+        self._explosion_frame = 0
+        self._spark_index = 0
+        self._spark_frame = 0
+        self.rect = None
+        self._spawn_delay = self._generate_spawn_delay()

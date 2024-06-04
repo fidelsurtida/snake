@@ -172,6 +172,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixes for the gameover screen execution and removed effects and floaters in the deathcam image.
 - June 4, 2024
   - Added explosion animation sprite and implemented explosion animation upon collision and destruction of bomb.
+  - Fixed bomb reset on retry and new game.
 
 <br>
 <b>This project is currently under development.</b>
