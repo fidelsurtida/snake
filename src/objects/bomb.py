@@ -21,10 +21,14 @@ class Bomb(Sprite):
     # Bomb Settings from Config
     SIZE = Config.BOMB_SIZE
     SPARK_SIZE = Config.SPARK_SIZE
+    EXPLOSION_SIZE = Config.EXPLOSION_SIZE
     LIFETIME = Config.BOMB_LIFETIME
+    SCALE_TIME = 0.5
     SPAWN_DELAY_MIN = Config.BOMB_MIN_SPAWN_DELAY
     SPAWN_DELAY_MAX = Config.BOMB_MAX_SPAWN_DELAY
-    SCALE_TIME = 0.5
+    EXPLOSION_SHEET = pygame.image.load(Config.assets_path("explosion.png"))
+    BOMB_IMAGE = pygame.image.load(Config.assets_path("bomb.png"))
+    SPARK_SHEET = pygame.image.load(Config.assets_path("particles.png"))
 
     def __init__(self, *, damage, deduction, snake):
         """
@@ -34,9 +38,10 @@ class Bomb(Sprite):
         snake to prevent spawns near the snake body.
         """
         super().__init__()
-        self._img = pygame.image.load(Config.assets_path("bomb.png"))
+        self._img = self.BOMB_IMAGE
         self.image = pygame.transform.scale(self._img, (0, 0))
         self.spawned = False
+        self.exploding = False
         self.damage = damage
         self.deduction = deduction
         self._snake = snake
@@ -49,6 +54,10 @@ class Bomb(Sprite):
         self._spark_frame = 0
         self._spark_show = False
         self._load_spark_animation()
+        # Load the explosions animations
+        self._explosion_index = 0
+        self._explosion_frame = 0
+        self._load_explosion_animation()
 
     def _generate_spawn_delay(self):
         """ Generates a random number for the spawn delay attribute. """
@@ -56,13 +65,21 @@ class Bomb(Sprite):
 
     def _load_spark_animation(self):
         """ Load the spark animation sprite sheet into an array of images. """
-        spark_sheet = pygame.image.load(Config.assets_path("particles.png"))
         self._spark_imgs = []
         for index in range(4):
-            spark_img = spark_sheet.subsurface((index * 50, 50, 50, 50))
+            spark_img = self.SPARK_SHEET.subsurface((index * 50, 50, 50, 50))
             spark_img = pygame.transform.scale(spark_img, (self.SPARK_SIZE,
                                                            self.SPARK_SIZE))
             self._spark_imgs.append(spark_img)
+
+    def _load_explosion_animation(self):
+        """ Load the explosion sprite sheet into an array of images. """
+        self._explosion_imgs = []
+        for i in range(10):
+            exp_img = self.EXPLOSION_SHEET.subsurface((i * 256, 0, 256, 256))
+            exp_img = pygame.transform.scale(exp_img, (self.EXPLOSION_SIZE,
+                                                       self.EXPLOSION_SIZE))
+            self._explosion_imgs.append(exp_img)
 
     def _spawn_bomb(self):
         """
@@ -88,6 +105,9 @@ class Bomb(Sprite):
         self._lifetime = self.LIFETIME
         self.rect = rect
         self.spawned = True
+        self.exploding = False
+        self._explosion_index = 0
+        self._explosion_frame = 0
 
     def update(self, time_delta):
         """ Updates the attributes of the bomb object. """
@@ -137,6 +157,13 @@ class Bomb(Sprite):
                 self._spark_index = (self._spark_index + 1) % 4
                 self._spark_frame = 0
 
+        # Update the explosion animation if its currently exploding
+        if self.exploding and self._explosion_index < 10:
+            self._explosion_frame += time_delta
+            if self._explosion_frame >= 0.06:
+                self._explosion_index += 1
+                self._explosion_frame = 0
+
     def draw(self, screen):
         """ Draw the bomb in the screen if its spawned. """
         if self.spawned:
@@ -147,6 +174,15 @@ class Bomb(Sprite):
                 rspark = pygame.Rect(pygame.Vector2(30, -6) + self.rect.topleft,
                                      (self.SPARK_SIZE, self.SPARK_SIZE))
                 screen.blit(self._spark_imgs[self._spark_index], rspark)
+
+        # Draw the explosion if the bomb is destroyed
+        if self.exploding and self._explosion_index < 10:
+            center = self.EXPLOSION_SIZE // 2 - 25
+            center = self.rect.topleft - pygame.Vector2(center, center)
+            rect_explode = pygame.Rect(center, (self.EXPLOSION_SIZE,
+                                                self.EXPLOSION_SIZE))
+            screen.blit(self._explosion_imgs[self._explosion_index],
+                        rect_explode)
 
     @property
     def bounds(self):
@@ -160,5 +196,6 @@ class Bomb(Sprite):
     def destroy(self):
         """ Removes the bomb and let it respawn again. """
         self.spawned = False
+        self.exploding = True
         self._lifetime = 0
         self._spawn_delay = self._generate_spawn_delay()

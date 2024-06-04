@@ -42,6 +42,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - Apple Sprite downloaded from [Vecteezy Apple PNGS](https://www.vecteezy.com/free-png/apple)
 - Speedup Shoes and Snail Sprites downloaded from [Freepik](https://www.freepik.com/)
 - Bomb Sprite and Explosion Particles from [Freepik](https://www.freepik.com/)
+- Explosion Images downloaded from [CraftPix](https://craftpix.net/freebies/11-free-pixel-art-explosion-sprites/)
 - Button Icons and Particles downloaded from [Freepik](https://www.freepik.com/)
 - All fonts used are free license from [Dafont](https://www.dafont.com)
 
@@ -169,6 +170,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - June 3, 2024
   - Implemented collision to bombs and display of negative health and score floater.
   - Fixes for the gameover screen execution and removed effects and floaters in the deathcam image.
+- June 4, 2024
+  - Added explosion animation sprite and implemented explosion animation upon collision and destruction of bomb.
 
 <br>
 <b>This project is currently under development.</b>
