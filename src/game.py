@@ -280,12 +280,14 @@ class Game:
 
         # Draw game objects that are only viewable in PLAY mode
         if self.state == GAMESTATE.PLAY:
+            # Draw the available bombs
+            for bomb in self.bombs:
+                bomb.draw(self.screen)
+            # Draw the powerups and items
             self.apple.draw(self.screen)
             self.golden_apple.draw(self.screen)
             self.speedup.draw(self.screen)
             self.slowdown.draw(self.screen)
-            for bomb in self.bombs:
-                bomb.draw(self.screen)
 
         # Draw the GUI elements from Inteface
         self.interface.draw()
@@ -387,6 +389,7 @@ class Game:
                                                 damage=bomb.damage,
                                                 deduction=bomb.deduction)
                 # Reduce the score and health then update the labels
+                self.snake.trigger_damaged()
                 self.score = max(0, self.score - bomb.deduction)
                 self.snake.lifetime = max(0, self.snake.lifetime - bomb.damage)
                 self.interface.update_score(self.score)

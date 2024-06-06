@@ -23,6 +23,7 @@ class Snake:
     SIZE = Config.SNAKE_SIZE
     LIFETIME = Config.SNAKE_LIFETIME
     BUFF_DURATION = Config.BUFF_DURATION
+    DAMAGED = False
 
     # Movement Class Constants
     ZERO = pygame.Vector2(0, 0)
@@ -61,6 +62,7 @@ class Snake:
         self._buff_duration = 0
         self._buff_counter = None
         self._buff_rect = None
+        self._damage_timer = 0
         for i in range(1, 5):
             # Seperate the tail sprite into the last element
             sprite = self._bodyimg if i < 4 else self._tailimg
@@ -154,6 +156,13 @@ class Snake:
         for cover in self.covers[:]:
             if cover.update(time_delta):
                 self.covers.remove(cover)
+
+        # Update the snake damage timer and Flag
+        if self._damage_timer > 0:
+            self._damage_timer = max(0, self._damage_timer - time_delta)
+            Snake.DAMAGED = True
+        else:
+            Snake.DAMAGED = False
 
         # Updates the head sprite animation index
         self._time_frame += time_delta
@@ -314,6 +323,10 @@ class Snake:
         Snake.LEFT = pygame.Vector2(-speed, 0)
         Snake.RIGHT = pygame.Vector2(speed, 0)
 
+    def trigger_damaged(self):
+        """ Updates the snake parts to trigger the damaged sprite blend. """
+        self._damage_timer = 0.4
+
     def die(self):
         """ Changes the sprite of the head of snake to dead sprite. """
         self.dead = True
@@ -395,7 +408,15 @@ class SnakePart(Sprite):
 
     def draw(self, screen):
         """ Draw this individual part to the screen. """
-        screen.blit(self.image, self.rect)
+        # If the flag is damaged then draw the part with a blend of red.
+        if Snake.DAMAGED:
+            image = self.image.copy()
+            cmask = pygame.Surface(image.get_size()).convert_alpha()
+            cmask.fill(pygame.Color(255, 0, 0, 255))
+            image.blit(cmask, (0, 0), special_flags=pygame.BLENDMODE_BLEND)
+            screen.blit(image, self.rect)
+        else:
+            screen.blit(self.image, self.rect)
 
     def teleport(self, x, y, *, corner="topleft"):
         """ Teleports the position of this snake part. """
@@ -467,7 +488,8 @@ class SnakeCover:
         Initializes a SnakeCover object to cover the turning snake parts.
         It has a delay counter that determines the lifetime of the cover.
         """
-        self._turn_cover = turn_cover
+        self._turn_cover_orig = turn_cover.copy()
+        self._turn_cover = turn_cover.copy()
         self.rect = cover_rect
         self.bg_rect = cover_rect.copy()
         self.delay = 0.07
@@ -480,12 +502,22 @@ class SnakeCover:
                 self.bg_rect.topleft += adjustment
                 self.bg_rect.size -= adjustment
         self._bg_cover = background.subsurface(self.bg_rect)
+        # Create the damaged turn cover
+        cmask = pygame.Surface(self._turn_cover.get_size()).convert_alpha()
+        cmask.fill(pygame.Color(255, 0, 0, 255))
+        self._turn_cover.blit(cmask, (0, 0),
+                              special_flags=pygame.BLENDMODE_BLEND)
 
     def draw(self, screen):
         """ Draw first the bg_cover then next is the turn_cover. """
         if self._bg_cover:
             screen.blit(self._bg_cover, self.bg_rect)
-        screen.blit(self._turn_cover, self.rect)
+
+        # If the flag is damaged then draw the red blend turn cover
+        if Snake.DAMAGED:
+            screen.blit(self._turn_cover, self.rect)
+        else:
+            screen.blit(self._turn_cover_orig, self.rect)
 
     def update(self, time_delta):
         """ Reduces the delay counter based on passed time_delta. """

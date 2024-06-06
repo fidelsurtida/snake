@@ -173,6 +173,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - June 4, 2024
   - Added explosion animation sprite and implemented explosion animation upon collision and destruction of bomb.
   - Fixed bomb reset on retry and new game.
+- June 6, 2024
+  - Added Color Red Blend Bomb Effect on snake body and covers after collision of bombs.
 
 <br>
 <b>This project is currently under development.</b>
