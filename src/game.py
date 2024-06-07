@@ -101,6 +101,9 @@ class Game:
         self._uturn = False
         self.score = 0
         self.total_time = 0
+        # Destroy and reset all bombs
+        for bomb in self.bombs:
+            bomb.reset()
 
     def update(self, time_delta):
         """
@@ -148,8 +151,12 @@ class Game:
             for bomb in self.bombs:
                 bomb.update(time_delta)
 
+            # Reduce the gameover counter if the lifetime of snake reaches 0
+            if self.snake.lifetime <= 0:
+                self._gameover_counter -= time_delta
+
             # Call the gameover event if the counter reaches 0
-            if self._gameover_counter == 0:
+            if self._gameover_counter <= 0:
                 self.set_gameover_event()
 
         # HANDLE GAMEOVER EVENTS
@@ -279,7 +286,7 @@ class Game:
         self.snake.draw(self.screen)
 
         # Draw game objects that are only viewable in PLAY mode
-        if self.state == GAMESTATE.PLAY:
+        if self.state == GAMESTATE.PLAY or self.state == GAMESTATE.GAMEOVER:
             # Draw the available bombs
             for bomb in self.bombs:
                 bomb.draw(self.screen)
@@ -393,6 +400,9 @@ class Game:
                 self.score = max(0, self.score - bomb.deduction)
                 self.snake.lifetime = max(0, self.snake.lifetime - bomb.damage)
                 self.interface.update_score(self.score)
+                # If lifetime reaches 0 then reconfig the gameover counter
+                if self.snake.lifetime <= 0:
+                    self._gameover_counter = 0.35
                 # Destroy the bomb to respawn it again
                 bomb.destroy()
                 break
@@ -436,10 +446,6 @@ class Game:
         # Remove the floaters
         self.interface.destroy_floaters()
 
-        # Destroy all bombs
-        for bomb in self.bombs:
-            bomb.reset()
-
         # Set the dead image sprite of the snake head
         self.snake.die()
         self.snake.draw(self.screen)
@@ -461,7 +467,8 @@ class Game:
         moments_rect = pygame.Rect(*snakepos, width, height)
         moments_rect = moments_rect.clamp(self.screen.get_rect())
         moments = self.screen.subsurface(moments_rect)
-        self.interface.update_moments_image(moments)
+        life_left = int(self.snake.lifetime)
+        self.interface.update_moments_image(moments, life_left)
 
         # Finally set the interface to gameover
         self._interface_gameover_delay = -1

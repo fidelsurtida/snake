@@ -175,6 +175,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Fixed bomb reset on retry and new game.
 - June 6, 2024
   - Added Color Red Blend Bomb Effect on snake body and covers after collision of bombs.
+- June 7, 2024
+  - Fixed Deathcam to show items and particle effects and health left. Added condition to end game on zero lifetime.
 
 <br>
 <b>This project is currently under development.</b>

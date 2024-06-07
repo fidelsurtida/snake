@@ -347,6 +347,18 @@ class Interface:
             image_surface=self.icons.subsurface((131, 4, 20, 18)),
             container=moments_panel
         )
+        # Create the heart icon in deathcam panel to show health left
+        pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect(7, picheight - 52, 23, 21),
+            image_surface=self.icons.subsurface((0, 0, 65, 60)),
+            container=moments_panel
+        )
+        # Create the Life left label beside the heart icon
+        self.life_left = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(35, picheight - 55, 100, 25),
+            container=moments_panel, object_id="#lifeleft_lbl",
+            text="LIFE: "
+        )
 
     def _initialize_play_elements(self):
         """
@@ -544,7 +556,8 @@ class Interface:
         data = data if data else [None, None, None]
         self._initialize_leaderboard_items(data)
 
-    def update_moments_image(self, image):
+    def update_moments_image(self, image, life_left):
         """ Updates the last moments image with the given image. """
         self.moments_image.set_image(image)
         self.moments_image.rebuild()
+        self.life_left.set_text(f"HEALTH: {life_left}")

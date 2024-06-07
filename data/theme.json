@@ -315,6 +315,25 @@
       }
    },
 
+   "#lifeleft_lbl":
+   {
+      "prototype": "#designer_font",
+      "colours":
+      {
+         "normal_text": "#ddd",
+         "text_shadow": "#222"
+      },
+      "font":
+      {
+         "size": "14"
+      },
+      "misc":
+      {
+         "text_horiz_alignment": "left",
+         "text_shadow_size": "1"
+      }
+   },
+
    "#player_lbl":
    {
       "prototype": "#mont_font",
