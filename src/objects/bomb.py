@@ -187,6 +187,11 @@ class Bomb(Sprite):
     @property
     def bounds(self):
         """ Returns the reduced Rect object of the Food. """
+        # If lifetime left is for scaling down the bomb then return None
+        if self._lifetime <= self.SCALE_TIME:
+            return pygame.Rect(0, 0, 0, 0)
+
+        # Else return the default reduced bounds
         rect = self.rect.copy()
         adjustment = self.SIZE // 4
         rect.topleft = (rect.x + adjustment, rect.y + adjustment)
