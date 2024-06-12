@@ -180,6 +180,7 @@ If you have any questions or issues, please feel free to [open an issue](https:/
   - Updated Bomb bounds to reduce to 0 when despawning and balanced the slowdown spawn position.
 - June 12, 2014
   - Fix on snake autopath to prevent from going beyond the window boundaries.
+  - Updated License to GPL-3.0
 
 <br>
 <b>This project is currently under development.</b>
