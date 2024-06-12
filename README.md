@@ -178,6 +178,8 @@ If you have any questions or issues, please feel free to [open an issue](https:/
 - June 7, 2024
   - Fixed Deathcam to show items and particle effects and health left. Added condition to end game on zero lifetime.
   - Updated Bomb bounds to reduce to 0 when despawning and balanced the slowdown spawn position.
+- June 12, 2014
+  - Fix on snake autopath to prevent from going beyond the window boundaries.
 
 <br>
 <b>This project is currently under development.</b>

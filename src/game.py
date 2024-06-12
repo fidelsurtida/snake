@@ -307,20 +307,20 @@ class Game:
         """
         xhead, yhead = self.snake.head.bounds.topleft
         direction = self.snake.head.direction
-        topmax, botmax = 60, self.HEIGHT - 100
-        leftmax, rightmax = 60, self.WIDTH - 100
+        topmax, botmax = 80, self.HEIGHT - 120
+        leftmax, rightmax = 80, self.WIDTH - 120
 
         if not self._uturn and (yhead < topmax or yhead > botmax):
             self.snake.move(random.choice([Snake.LEFT, Snake.RIGHT]))
-            self._auto_path_counter = 0.6
+            self._auto_path_counter = 0.3
             self._uturn = [Snake.DOWN] if yhead < topmax else [Snake.UP]
 
         if not self._uturn and (xhead < leftmax or xhead > rightmax):
             self.snake.move(random.choice([Snake.UP, Snake.DOWN]))
-            self._auto_path_counter = 0.6
+            self._auto_path_counter = 0.3
             self._uturn = [Snake.RIGHT] if xhead < leftmax else [Snake.LEFT]
 
-        if self._auto_path_counter >= 1:
+        if self._auto_path_counter >= 0.7:
             # Remove the current direction and its opposite direction
             moves = [Snake.UP, Snake.DOWN, Snake.LEFT, Snake.RIGHT]
             if self._uturn:
@@ -332,7 +332,7 @@ class Game:
             # Randomize the next valid moves
             next_move = random.choice(moves)
             self.snake.move(next_move)
-            self._auto_path_counter = -1 if self._uturn else 0
+            self._auto_path_counter = -0.3 if self._uturn else 0
             self._uturn = None
 
         self._auto_path_counter += time_delta
